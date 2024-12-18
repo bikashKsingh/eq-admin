@@ -65,13 +65,16 @@ export function PlanList() {
     [pagination.page, pagination.limit, searchQuery, needReload, status]
   );
 
-  const columns: Column<{
+  type Record = {
     name: any;
-    days: any;
+    allowSubscription: any;
+    subscriptionDiscountPercentage: any;
     createdAt: any;
     status: any;
     id: any;
-  }>[] = React.useMemo(
+  };
+
+  const columns: Column<Record>[] = React.useMemo(
     () => [
       {
         id: "selection",
@@ -94,8 +97,20 @@ export function PlanList() {
       },
 
       {
-        Header: "DAYS",
-        accessor: "days",
+        Header: "ALLOW SUBSCRIPTION",
+        accessor: "allowSubscription",
+        Cell: ({ value }: any) => {
+          return value ? (
+            <span className="badge bg-info">Yes</span>
+          ) : (
+            <span className="badge bg-danger">No</span>
+          );
+        },
+      },
+
+      {
+        Header: "DISCOUNT PERCENTAGE",
+        accessor: "subscriptionDiscountPercentage",
       },
 
       {
@@ -162,7 +177,8 @@ export function PlanList() {
     return records.map((data) => {
       return {
         name: data.name,
-        days: data.days,
+        allowSubscription: data.allowSubscription,
+        subscriptionDiscountPercentage: data.subscriptionDiscountPercentage,
         createdAt: data.createdAt,
         status: data.status,
         id: data._id,
@@ -177,34 +193,7 @@ export function PlanList() {
       useSortBy,
       usePagination,
       useRowSelect
-
-      // Use a custom hook to add selection functionality
-      // (hooks) => {
-      //   hooks.visibleColumns.push((columns) => [
-      //     {
-      //       id: "selection",
-      //       disableSortBy: true,
-      //       Header: ({ getToggleAllRowsSelectedProps }) => (
-      //         <div>
-      //           <input type="checkbox" {...getToggleAllRowsSelectedProps()} />
-      //         </div>
-      //       ),
-      //       Cell: ({ row }) => (
-      //         <div>
-      //           <input type="checkbox" {...row.getToggleRowSelectedProps()} />
-      //         </div>
-      //       ),
-      //     },
-      //     ...columns,
-      //   ]);
-      // }
-    ) as TableInstanceWithRowSelect<{
-      name: any;
-      days: any;
-      createdAt: any;
-      status: any;
-      id: any;
-    }>;
+    ) as TableInstanceWithRowSelect<Record>;
 
   // handleDeleteData
   async function handleDeleteData(recordId: string | string[]) {

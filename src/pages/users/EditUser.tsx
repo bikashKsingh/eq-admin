@@ -47,8 +47,6 @@ export function EditUser() {
         toast.success(apiResponse?.message);
         navigate(-1);
       } else {
-        console.log(apiResponse);
-
         helpers.setErrors(apiResponse?.errors);
         toast.error(apiResponse?.message);
       }

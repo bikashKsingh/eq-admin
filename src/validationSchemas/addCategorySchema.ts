@@ -8,7 +8,6 @@ export const categorySchema = Yup.object({
   video: Yup.string().label("Video"),
   metaTitle: Yup.string().label("Meta Title"),
   metaDescription: Yup.string().label("Meta Description"),
-  metaKeywords: Yup.string().label("Meta Keywords"),
 });
 
 export const categoryInitialValues: CategoryValues = {

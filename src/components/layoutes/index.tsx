@@ -3,4 +3,8 @@ export * from "./Footer";
 export * from "./Sidebar";
 export * from "./Router";
 export * from "./MainLayout";
-export * from "./AuthLayout";
+
+// Trainer
+export * from "./trainer/TrainerHeader";
+export * from "./trainer/TrainerSidebar";
+export * from "./trainer/TrainerLayout";

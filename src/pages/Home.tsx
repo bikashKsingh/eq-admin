@@ -5,6 +5,11 @@ import BarChart from "../components/charts/BarChart";
 import PieChart from "../components/charts/PieChart";
 import BasicBars from "../components/charts/BasicBarChart";
 import DoughnutChart from "../components/charts/DoughnutChart";
+import { useEffect, useState } from "react";
+import { get } from "../utills";
+import { toast } from "react-toastify";
+import { Spinner } from "../components/ui/Spinner";
+import { useAuth } from "../customHooks/useAuth";
 
 export function Home() {
   const chartContainerStyle: any = {
@@ -15,6 +20,26 @@ export function Home() {
     display: "flex",
     justifyContent: "center",
   };
+
+  const [usersDataLoading, setUsersDetaLoading] = useState<boolean>(true);
+  const [usersData, setUsersData] = useState<any>(null);
+  // const { state, dispatch } = useAuth();
+
+  // get total users
+  useEffect(function () {
+    async function getData() {
+      setUsersDetaLoading(true);
+      const apiResponse = await get(`/users/dashboard`, true);
+      if (apiResponse?.status == 200) {
+        setUsersData(apiResponse?.body);
+      } else {
+        toast.error(apiResponse?.message);
+      }
+      setUsersDetaLoading(false);
+    }
+    getData();
+  }, []);
+
   return (
     <div className="content-wrapper">
       <div className="row">
@@ -42,17 +67,34 @@ export function Home() {
                 Total Users
               </p>
               <div className="d-flex flex-wrap justify-content-between justify-content-md-center justify-content-xl-between align-items-center">
-                <h3 className="mb-0 mb-md-2 mb-xl-0 order-md-1 order-xl-0">
-                  100
-                </h3>
+                {usersDataLoading ? (
+                  <Spinner />
+                ) : (
+                  <h3 className="mb-0 mb-md-2 mb-xl-0 order-md-1 order-xl-0">
+                    {usersData?.totalRecords}
+                  </h3>
+                )}
                 <i className="ti-user icon-md text-muted mb-0 mb-md-3 mb-xl-0"></i>
               </div>
-              <p className="mb-0 mt-2 text-danger">
-                0.12%
-                <span className="text-black ms-1">
-                  <small>(30 days)</small>
-                </span>
-              </p>
+              {usersDataLoading ? (
+                <div>
+                  <Spinner /> Loading
+                </div>
+              ) : usersData?.percentageChange < 0 ? (
+                <p className="mb-0 mt-2 text-danger">
+                  {Math.abs(usersData?.percentageChange).toFixed(2)}%
+                  <span className="text-black ms-1">
+                    <small>(30 days)</small>
+                  </span>
+                </p>
+              ) : (
+                <p className="mb-0 mt-2 text-success">
+                  {usersData?.percentageChange?.toFixed(2)}%
+                  <span className="text-black ms-1">
+                    <small>(30 days)</small>
+                  </span>
+                </p>
+              )}
             </div>
           </div>
         </div>
@@ -332,9 +374,9 @@ export function Home() {
                                   className="progress-bar bg-primary"
                                   role="progressbar"
                                   style={{ width: "70%" }}
-                                  aria-valuenow="70"
-                                  aria-valuemin="0"
-                                  aria-valuemax="100"
+                                  aria-valuenow={70}
+                                  aria-valuemin={0}
+                                  aria-valuemax={100}
                                 ></div>
                               </div>
                             </td>
@@ -368,9 +410,9 @@ export function Home() {
                                   className="progress-bar bg-primary"
                                   role="progressbar"
                                   style={{ width: "95%" }}
-                                  aria-valuenow="95"
-                                  aria-valuemin="0"
-                                  aria-valuemax="100"
+                                  aria-valuenow={95}
+                                  aria-valuemin={0}
+                                  aria-valuemax={100}
                                 ></div>
                               </div>
                             </td>
@@ -386,9 +428,9 @@ export function Home() {
                                   className="progress-bar bg-primary"
                                   role="progressbar"
                                   style={{ width: "60%" }}
-                                  aria-valuenow="60"
-                                  aria-valuemin="0"
-                                  aria-valuemax="100"
+                                  aria-valuenow={60}
+                                  aria-valuemin={0}
+                                  aria-valuemax={100}
                                 ></div>
                               </div>
                             </td>
@@ -404,9 +446,9 @@ export function Home() {
                                   className="progress-bar bg-primary"
                                   role="progressbar"
                                   style={{ width: "40%" }}
-                                  aria-valuenow="40"
-                                  aria-valuemin="0"
-                                  aria-valuemax="100"
+                                  aria-valuenow={40}
+                                  aria-valuemin={0}
+                                  aria-valuemax={100}
                                 ></div>
                               </div>
                             </td>

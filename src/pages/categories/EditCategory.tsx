@@ -1,4 +1,5 @@
 import {
+  CustomSelect,
   GoBackButton,
   InputBox,
   SubmitButton,
@@ -26,6 +27,7 @@ export function EditCategory() {
     icon: string;
     error: string;
   };
+
   const [uspInputFields, setUspInputFields] = useState<USP[]>([
     {
       title: "",

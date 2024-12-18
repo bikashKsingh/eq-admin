@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../customHooks/useAuth";
 
 export function Header() {
   const navigation = useNavigate();
+  const { state, dispatch } = useAuth();
   function handleDesktopSidebar(evt: React.MouseEvent<HTMLElement>) {
     evt.preventDefault();
     document.body.classList.toggle("sidebar-icon-only");
@@ -13,11 +15,18 @@ export function Header() {
     sidebar?.classList.toggle("active");
   }
 
-  function handelLogout(evt: React.MouseEvent<HTMLElement>) {
+  // handleLogout
+  function handleLogout(evt: React.MouseEvent<HTMLElement>) {
     evt.preventDefault();
-    localStorage.removeItem("token");
-    navigation("/login");
+    dispatch({ type: "CLEAR_TOKEN" });
   }
+
+  // If not logedin
+  useEffect(() => {
+    if (!state.token || state.user != "ADMIN") {
+      navigation("/login");
+    }
+  }, [state]);
 
   return (
     <nav className="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
@@ -199,7 +208,7 @@ export function Header() {
                 <i className="ti-settings text-primary"></i>
                 Settings
               </a> */}
-              <a className="dropdown-item" onClick={handelLogout}>
+              <a className="dropdown-item" onClick={handleLogout}>
                 <i className="ti-power-off text-primary"></i>
                 Logout
               </a>

@@ -1,0 +1,1 @@
+export type BOOKING_STATUS = "BOOKED" | "CANCELLED" | "EXPIRED" | "ACTIVE";

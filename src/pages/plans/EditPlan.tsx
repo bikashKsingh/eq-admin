@@ -6,10 +6,10 @@ import {
 } from "../../components";
 import { FormikHelpers, useFormik } from "formik";
 import {
-  programDurationSchema,
-  ProgramDurarionValues,
-  programDurationInitialValues,
-} from "../../validationSchemas/programDurationSchema";
+  planSchema,
+  PlanValues,
+  planInitialValues,
+} from "../../validationSchemas/planSchema";
 import { useEffect, useState } from "react";
 import {
   get,
@@ -39,8 +39,8 @@ export function EditPlan() {
     setFieldValue,
   } = useFormik({
     onSubmit: async function (
-      values: ProgramDurarionValues,
-      helpers: FormikHelpers<ProgramDurarionValues>
+      values: PlanValues,
+      helpers: FormikHelpers<PlanValues>
     ) {
       setLoading(true);
 
@@ -55,8 +55,8 @@ export function EditPlan() {
       }
       setLoading(false);
     },
-    initialValues: programDurationInitialValues,
-    validationSchema: programDurationSchema,
+    initialValues: planInitialValues,
+    validationSchema: planSchema,
   });
 
   // Get Data From Database
@@ -68,6 +68,7 @@ export function EditPlan() {
         if (apiResponse?.status == 200) {
           const apiData = apiResponse.body;
           apiData.status = `${apiData.status}`;
+          apiData.allowSubscription = `${apiData.allowSubscription}`;
           delete apiData.isDeleted;
           delete apiData.createdAt;
           delete apiData.updatedAt;
@@ -93,12 +94,12 @@ export function EditPlan() {
               <h4 className="font-weight-bold mb-0">Edit Plan</h4>
             </div>
             {/* <div>
-              <button
+              <buttons
                 type="button"
                 className="btn btn-primary btn-icon-text btn-rounded"
               >
                 <i className="ti-clipboard btn-icon-prepend"></i>Report
-              </button>
+              </buttons>
             </div> */}
           </div>
         </div>
@@ -163,6 +164,70 @@ export function EditPlan() {
                       error={errors.days}
                     />
                   </div>
+
+                  <div className="form-group col-md-6">
+                    <label htmlFor="">Allow Subscription</label>
+                    <div className="d-flex gap-3">
+                      <div className="d-flex align-items-center gap-2">
+                        <input
+                          type="radio"
+                          name="allowSubscription"
+                          id="allowSubscriptionTrue"
+                          value={"true"}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          checked={values.allowSubscription == "true"}
+                        />
+                        <label htmlFor="allowSubscriptionTrue" className="mt-2">
+                          Yes
+                        </label>
+                      </div>
+                      <div className="d-flex align-items-center gap-1">
+                        <input
+                          type="radio"
+                          name="allowSubscription"
+                          id="allowSubscriptionFalse"
+                          value={"false"}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          checked={values.allowSubscription == "false"}
+                        />
+                        <label
+                          htmlFor="allowSubscriptionFalse"
+                          className="mt-2"
+                        >
+                          No
+                        </label>
+                      </div>
+                    </div>
+                    {errors.allowSubscription && touched.allowSubscription ? (
+                      <p className="custom-form-error text-danger">
+                        {errors.allowSubscription}
+                      </p>
+                    ) : null}
+                  </div>
+
+                  {values?.allowSubscription == "true" ? (
+                    <div className="form-group col-md-6">
+                      <InputBox
+                        label="Subscription Discount Percentage"
+                        name="subscriptionDiscountPercentage"
+                        handleBlur={handleBlur}
+                        handleChange={(evt) => {
+                          setFieldValue(
+                            "subscriptionDiscountPercentage",
+                            validateNumber(evt.target.value)
+                          );
+                        }}
+                        type="number"
+                        placeholder="Enter off percentage"
+                        value={values.subscriptionDiscountPercentage}
+                        required={false}
+                        touched={touched.subscriptionDiscountPercentage}
+                        error={errors.subscriptionDiscountPercentage}
+                      />
+                    </div>
+                  ) : null}
 
                   <div className="form-group col-md-6">
                     <label htmlFor="">Status</label>

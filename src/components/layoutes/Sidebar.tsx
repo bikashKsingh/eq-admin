@@ -64,6 +64,52 @@ export function Sidebar() {
           </div>
         </li>
 
+        <li className="nav-item">
+          <a
+            className="nav-link"
+            data-bs-toggle="collapse"
+            href="#build-own-plan"
+            aria-expanded="false"
+            aria-controls="build-own-plan"
+          >
+            <i className="ti-settings menu-icon"></i>
+            <span className="menu-title">Build Plan</span>
+            <i className="menu-arrow"></i>
+          </a>
+          <div className="collapse" id="build-own-plan">
+            <ul className="nav flex-column sub-menu">
+              <li className="nav-item">
+                <Link className="nav-link" to="/goals">
+                  Goals
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link" to="/ageRanges">
+                  Age Ranges
+                </Link>
+              </li>
+
+              <li className="nav-item">
+                <Link className="nav-link" to="/yogaExperiences">
+                  Yoga Experiences
+                </Link>
+              </li>
+
+              <li className="nav-item">
+                <Link className="nav-link" to="/timeSlots">
+                  Time Slots
+                </Link>
+              </li>
+
+              <li className="nav-item">
+                <Link className="nav-link" to="/budgets">
+                  Plan Budgets
+                </Link>
+              </li>
+            </ul>
+          </div>
+        </li>
+
         {/* Categories */}
         <li className="nav-item">
           <a
@@ -131,11 +177,11 @@ export function Sidebar() {
                   Trainers
                 </Link>
               </li>
-              <li className="nav-item">
+              {/* <li className="nav-item">
                 <Link className="nav-link" to="/pages/ui-features/buttons.html">
                   Franchise
                 </Link>
-              </li>
+              </li> */}
             </ul>
           </div>
         </li>
@@ -196,6 +242,11 @@ export function Sidebar() {
                 </Link>
               </li>
               <li className="nav-item">
+                <Link className="nav-link" to="/planTypes">
+                  Plan Types
+                </Link>
+              </li>
+              <li className="nav-item">
                 <Link className="nav-link" to="/programs">
                   Program List
                 </Link>
@@ -207,6 +258,13 @@ export function Sidebar() {
               </li>
             </ul>
           </div>
+        </li>
+
+        <li className="nav-item">
+          <Link className="nav-link" to="/bookings">
+            <i className="ti-package menu-icon"></i>
+            <span className="menu-title">My Bookings</span>
+          </Link>
         </li>
 
         <li className="nav-item">

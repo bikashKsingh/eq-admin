@@ -24,6 +24,7 @@ export function AddProgramPlan() {
   const { id } = useParams();
   const [programDetails, setProgramDetails] = useState<any>(null);
   const [plans, setPlans] = useState<any[]>([]);
+  const [planTypes, setPlanTypes] = useState<any[]>([]);
 
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -43,7 +44,12 @@ export function AddProgramPlan() {
     ) {
       setLoading(true);
 
-      const newValue = { ...values, program: id, plan: values?.plan?.value };
+      const newValue = {
+        ...values,
+        program: id,
+        plan: values?.plan?.value,
+        planType: values.planType?.value,
+      };
 
       const apiResponse = await post("/programPlans", newValue, true);
 
@@ -59,15 +65,6 @@ export function AddProgramPlan() {
     initialValues: programPlanInitialValues,
     validationSchema: programPlanSchema,
   });
-
-  function handleTitleChange(evt: React.ChangeEvent<HTMLInputElement>) {
-    let value = evt.target.value;
-    let name = evt.target.name;
-    setFieldValue(name, value);
-
-    let slug = generateSlug(value);
-    setFieldValue("slug", slug);
-  }
 
   // Get Program Details
   useEffect(
@@ -87,7 +84,7 @@ export function AddProgramPlan() {
     [id]
   );
 
-  // get planed
+  // get plans
   useEffect(function () {
     async function getData() {
       const apiResponse = await get("/plans", true);
@@ -99,6 +96,24 @@ export function AddProgramPlan() {
           };
         });
         setPlans(modifiedValue);
+      }
+    }
+
+    getData();
+  }, []);
+
+  // get plan type
+  useEffect(function () {
+    async function getData() {
+      const apiResponse = await get("/planTypes", true);
+      if (apiResponse?.status == 200) {
+        const modifiedValue = apiResponse?.body?.map((value: any) => {
+          return {
+            label: value.title,
+            value: value._id,
+          };
+        });
+        setPlanTypes(modifiedValue);
       }
     }
 
@@ -132,7 +147,7 @@ export function AddProgramPlan() {
             <div className="card rounded-2">
               <div className="card-body">
                 <div className="row">
-                  <div className="form-group col-md-6">
+                  {/* <div className="form-group col-md-6">
                     <InputBox
                       label="Program Name"
                       name="name"
@@ -146,7 +161,7 @@ export function AddProgramPlan() {
                       error={""}
                       readonly={true}
                     />
-                  </div>
+                  </div> */}
 
                   <div className="form-group col-md-6">
                     <CustomSelect
@@ -164,6 +179,26 @@ export function AddProgramPlan() {
                       }}
                       handleBlur={() => {
                         setFieldTouched("plan", true);
+                      }}
+                    />
+                  </div>
+
+                  <div className="form-group col-md-6">
+                    <CustomSelect
+                      label="Select Plan Type"
+                      placeholder="Select plan type"
+                      name="planType"
+                      required={true}
+                      options={planTypes}
+                      value={values.planType}
+                      error={errors.planType}
+                      touched={touched.planType}
+                      isMulti={false}
+                      handleChange={(value) => {
+                        setFieldValue("planType", value);
+                      }}
+                      handleBlur={() => {
+                        setFieldTouched("planType", true);
                       }}
                     />
                   </div>
@@ -225,6 +260,7 @@ export function AddProgramPlan() {
                       error={errors.salePriceDollar}
                     />
                   </div>
+
                   <div className="form-group col-md-6">
                     <InputBox
                       label="MRP (Dollar)"
@@ -239,6 +275,7 @@ export function AddProgramPlan() {
                       error={errors.mrpDollar}
                     />
                   </div>
+
                   <div className="form-group col-md-6">
                     <InputBox
                       label="PT Sessions"
@@ -253,6 +290,7 @@ export function AddProgramPlan() {
                       error={errors.ptSession}
                     />
                   </div>
+
                   <div className="form-group col-md-6">
                     <InputBox
                       label="Group Sessions"
@@ -267,6 +305,7 @@ export function AddProgramPlan() {
                       error={errors.groupSession}
                     />
                   </div>
+
                   <div className="form-group col-md-6">
                     <InputBox
                       label="Plan Duration (in Days)"
@@ -279,6 +318,21 @@ export function AddProgramPlan() {
                       required={true}
                       touched={touched.planDuration}
                       error={errors.planDuration}
+                    />
+                  </div>
+
+                  <div className="form-group col-md-6">
+                    <InputBox
+                      label="Display Order"
+                      name="displayOrder"
+                      handleBlur={handleBlur}
+                      handleChange={handleChange}
+                      type="number"
+                      placeholder="Enter display order"
+                      value={values?.displayOrder}
+                      required={true}
+                      touched={touched.displayOrder}
+                      error={errors.displayOrder}
                     />
                   </div>
 

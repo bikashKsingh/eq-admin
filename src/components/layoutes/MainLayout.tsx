@@ -2,6 +2,7 @@ import { Router } from "./";
 import { Footer } from ".";
 import { Header } from ".";
 import { Sidebar } from ".";
+import { Outlet } from "react-router-dom";
 
 export function MainLayout() {
   return (
@@ -10,7 +11,7 @@ export function MainLayout() {
       <div className="container-fluid page-body-wrapper">
         <Sidebar />
         <div className="main-panel">
-          <Router />
+          <Outlet />
           <Footer />
         </div>
       </div>

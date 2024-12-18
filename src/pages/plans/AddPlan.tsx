@@ -2,10 +2,10 @@ import { GoBackButton, InputBox, SubmitButton } from "../../components";
 import { FormikHelpers, useFormik } from "formik";
 
 import {
-  programDurationSchema,
-  ProgramDurarionValues,
-  programDurationInitialValues,
-} from "../../validationSchemas/programDurationSchema";
+  planSchema,
+  PlanValues,
+  planInitialValues,
+} from "../../validationSchemas/planSchema";
 import { useState } from "react";
 import {
   generateSlug,
@@ -30,8 +30,8 @@ export function AddPlan() {
     setFieldValue,
   } = useFormik({
     onSubmit: async function (
-      values: ProgramDurarionValues,
-      helpers: FormikHelpers<ProgramDurarionValues>
+      values: PlanValues,
+      helpers: FormikHelpers<PlanValues>
     ) {
       setLoading(true);
       const apiResponse = await post("/plans", values, true);
@@ -44,8 +44,8 @@ export function AddPlan() {
       }
       setLoading(false);
     },
-    initialValues: programDurationInitialValues,
-    validationSchema: programDurationSchema,
+    initialValues: planInitialValues,
+    validationSchema: planSchema,
   });
 
   function handleTitleChange(evt: React.ChangeEvent<HTMLInputElement>) {
@@ -132,6 +132,71 @@ export function AddPlan() {
                       error={errors.days}
                     />
                   </div>
+
+                  <div className="form-group col-md-6">
+                    <label htmlFor="">Allow Subscription</label>
+                    <div className="d-flex gap-3">
+                      <div className="d-flex align-items-center gap-2">
+                        <input
+                          type="radio"
+                          name="allowSubscription"
+                          id="allowSubscriptionTrue"
+                          value={"true"}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          checked={values.allowSubscription == "true"}
+                        />
+                        <label htmlFor="allowSubscriptionTrue" className="mt-2">
+                          Yes
+                        </label>
+                      </div>
+                      <div className="d-flex align-items-center gap-1">
+                        <input
+                          type="radio"
+                          name="allowSubscription"
+                          id="allowSubscriptionFalse"
+                          value={"false"}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          checked={values.allowSubscription == "false"}
+                        />
+                        <label
+                          htmlFor="allowSubscriptionFalse"
+                          className="mt-2"
+                        >
+                          No
+                        </label>
+                      </div>
+                    </div>
+                    {errors.allowSubscription && touched.allowSubscription ? (
+                      <p className="custom-form-error text-danger">
+                        {errors.allowSubscription}
+                      </p>
+                    ) : null}
+                  </div>
+
+                  {values.allowSubscription == "true" ? (
+                    <div className="form-group col-md-6">
+                      <InputBox
+                        label="Subscription Discount Percentage"
+                        name="subscriptionDiscountPercentage"
+                        handleBlur={handleBlur}
+                        handleChange={(evt) => {
+                          setFieldValue(
+                            "subscriptionDiscountPercentage",
+                            validateNumber(evt.target.value)
+                          );
+                        }}
+                        type="number"
+                        placeholder="Enter off percentage"
+                        value={values.subscriptionDiscountPercentage}
+                        required={false}
+                        touched={touched.subscriptionDiscountPercentage}
+                        error={errors.subscriptionDiscountPercentage}
+                      />
+                    </div>
+                  ) : null}
+
                   <div className="form-group col-md-6">
                     <label htmlFor="">Status</label>
                     <div className="d-flex gap-3">

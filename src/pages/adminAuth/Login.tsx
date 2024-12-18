@@ -9,10 +9,12 @@ import { post } from "../../utills";
 import { SubmitButton } from "../../components";
 import { toast } from "react-toastify";
 import { Metadata } from "../../components";
+import { useAuth } from "../../customHooks/useAuth";
 
 export function Login(): ReactNode {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const { state, dispatch } = useAuth();
 
   const { values, errors, touched, handleChange, handleBlur, handleSubmit } =
     useFormik({
@@ -23,7 +25,7 @@ export function Login(): ReactNode {
 
         if (apiResponse?.status == 200) {
           const token = apiResponse?.body?.token;
-          localStorage.setItem("token", token);
+          dispatch({ type: "SET_TOKEN", payload: { token, user: "ADMIN" } });
           toast.success(apiResponse?.message);
           navigate("/");
         } else {
@@ -53,6 +55,11 @@ export function Login(): ReactNode {
                     <img src="/images/black-logo.png" alt="logo" />
                   </div>
                   {/* <h4>Hello! let's get started</h4> */}
+
+                  <div className="mb-3">
+                    <h4 className=" text-dark login-title">ADMIN LOGIN</h4>
+                  </div>
+
                   <h6 className="font-weight-light">Login to your Account.</h6>
                   <form className="pt-3" onSubmit={handleSubmit}>
                     <div className="form-group">
@@ -67,9 +74,9 @@ export function Login(): ReactNode {
                         onChange={handleChange}
                         onBlur={handleBlur}
                       />
-                      {touched.email && errors.email ? (
+                      {touched?.email && errors?.email ? (
                         <p className="text-danger custom-form-error">
-                          {errors.email}
+                          {errors?.email}
                         </p>
                       ) : null}
                     </div>
@@ -85,9 +92,9 @@ export function Login(): ReactNode {
                         onChange={handleChange}
                         onBlur={handleBlur}
                       />
-                      {touched.password && errors.password ? (
+                      {touched?.password && errors?.password ? (
                         <p className="text-danger custom-form-error">
-                          {errors.password}
+                          {errors?.password}
                         </p>
                       ) : null}
                     </div>

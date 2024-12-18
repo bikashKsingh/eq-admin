@@ -40,6 +40,12 @@ export function EditProgram() {
 
   const [loading, setLoading] = useState<boolean>(false);
 
+  const [goals, setGoals] = useState<any[]>([]);
+  const [ageRanges, setAgeRanges] = useState<any[]>([]);
+  const [yogaExperiences, setYogaExperiences] = useState<any[]>([]);
+  const [timeSlots, setTimeSlots] = useState<any[]>([]);
+  const [budgets, setBudgets] = useState<any[]>([]);
+
   const {
     values,
     errors,
@@ -74,13 +80,43 @@ export function EditProgram() {
         requirements = values.requirements.map((value) => value.value);
       }
 
+      // item
+      let usp = [];
+      for (let item of uspInputFields) {
+        if (item) {
+          usp.push(item);
+        }
+      }
+
       const newValue = {
         ...values,
         category: values.category?.value,
+        subCategory: values.subCategory?.value,
         faqs,
         images: values.images || [],
         requirements: requirements,
+        usp,
+        days: undefined,
+        amountPerMonth: undefined,
       };
+
+      if (values.goals?.length) {
+        newValue.goals = values.goals.map((item: any) => item.value);
+      }
+      if (values.ageRanges?.length) {
+        newValue.ageRanges = values.ageRanges.map((item: any) => item.value);
+      }
+      if (values.yogaExperiences?.length) {
+        newValue.yogaExperiences = values.yogaExperiences.map(
+          (item: any) => item.value
+        );
+      }
+      if (values.timeSlots?.length) {
+        newValue.timeSlots = values.timeSlots.map((item: any) => item.value);
+      }
+      if (values.budgets?.length) {
+        newValue.budgets = values.budgets.map((item: any) => item.value);
+      }
 
       const apiResponse = await put(`/programs/${id}`, newValue);
 
@@ -176,6 +212,7 @@ export function EditProgram() {
       async function getData(id: string) {
         setLoading(true);
         const apiResponse: any = await get(`/programs/${id}`, true);
+
         if (apiResponse?.status == 200) {
           const data: any = apiResponse.body;
 
@@ -189,8 +226,8 @@ export function EditProgram() {
           };
 
           data.subCategory = {
-            label: data.subCategory.name,
-            value: data.subCategory._id,
+            label: data?.subCategory?.name,
+            value: data?.subCategory?._id,
           };
 
           data.status = `${data.status}`;
@@ -215,7 +252,52 @@ export function EditProgram() {
             setFaqsInputFields(allFaqs);
           }
 
+          if (data?.goals?.length) {
+            data.goals = data?.goals?.map((item: any) => {
+              return {
+                label: item.title,
+                value: item._id,
+              };
+            });
+          }
+
+          if (data?.ageRanges?.length) {
+            data.ageRanges = data?.ageRanges?.map((item: any) => {
+              return {
+                label: item.title,
+                value: item._id,
+              };
+            });
+          }
+
+          if (data?.yogaExperiences?.length) {
+            data.yogaExperiences = data?.yogaExperiences?.map((item: any) => {
+              return {
+                label: item.title,
+                value: item._id,
+              };
+            });
+          }
+          if (data?.timeSlots?.length) {
+            data.timeSlots = data?.timeSlots?.map((item: any) => {
+              return {
+                label: item.title,
+                value: item._id,
+              };
+            });
+          }
+
+          if (data?.budgets?.length) {
+            data.budgets = data?.budgets?.map((item: any) => {
+              return {
+                label: `${item.minimum}-${item.maximum}`,
+                value: item._id,
+              };
+            });
+          }
+
           setValues(data);
+          setUspInputFields(data.usp);
         }
         setLoading(false);
       }
@@ -223,6 +305,96 @@ export function EditProgram() {
     },
     [id]
   );
+
+  // get goals
+  useEffect(function () {
+    async function getData() {
+      const apiResponse = await get("/goals?displayOrder=ASC", true);
+      if (apiResponse?.status == 200) {
+        const modifiedValue = apiResponse?.body?.map((value: any) => {
+          return {
+            label: value.title,
+            value: value._id,
+          };
+        });
+        setGoals(modifiedValue);
+      }
+    }
+
+    getData();
+  }, []);
+
+  // get ageRanges
+  useEffect(function () {
+    async function getData() {
+      const apiResponse = await get("/ageRanges?displayOrder=ASC", true);
+      if (apiResponse?.status == 200) {
+        const modifiedValue = apiResponse?.body?.map((value: any) => {
+          return {
+            label: value.title,
+            value: value._id,
+          };
+        });
+        setAgeRanges(modifiedValue);
+      }
+    }
+
+    getData();
+  }, []);
+
+  // get yogaExperiences
+  useEffect(function () {
+    async function getData() {
+      const apiResponse = await get("/yogaExperiences?displayOrder=ASC", true);
+      if (apiResponse?.status == 200) {
+        const modifiedValue = apiResponse?.body?.map((value: any) => {
+          return {
+            label: value.title,
+            value: value._id,
+          };
+        });
+        setYogaExperiences(modifiedValue);
+      }
+    }
+
+    getData();
+  }, []);
+
+  // get timeSlots
+  useEffect(function () {
+    async function getData() {
+      const apiResponse = await get("/timeSlots?displayOrder=ASC", true);
+      if (apiResponse?.status == 200) {
+        const modifiedValue = apiResponse?.body?.map((value: any) => {
+          return {
+            label: value.title,
+            value: value._id,
+          };
+        });
+        setTimeSlots(modifiedValue);
+      }
+    }
+
+    getData();
+  }, []);
+
+  // get budgets
+  useEffect(function () {
+    async function getData() {
+      const apiResponse = await get("/budgets?displayOrder=ASC", true);
+
+      if (apiResponse?.status == 200) {
+        const modifiedValue = apiResponse?.body?.map((value: any) => {
+          return {
+            label: `${value.minimum}-${value.maximum}`,
+            value: value._id,
+          };
+        });
+        setBudgets(modifiedValue);
+      }
+    }
+    getData();
+  }, []);
 
   // handleUploadFile
   // async function handleUploadFile(
@@ -493,47 +665,48 @@ export function EditProgram() {
 
       <div className="row">
         <div className="col-md-12 grid-margin stretch-card">
-          <form className="forms-sample" onSubmit={handleSubmit}>
-            {/* Basic Details */}
-            <div className="card rounded-2">
-              <div className="card-body">
-                <div className="row">
-                  <div className="col-md-12">
-                    <h5 className="mb-2">Basic Details</h5>
-                  </div>
-                  <div className="form-group col-md-6">
-                    <InputBox
-                      label="Program Name"
-                      name="name"
-                      handleBlur={handleBlur}
-                      handleChange={handleNameChange}
-                      type="text"
-                      placeholder="Enter program name"
-                      value={values.name}
-                      required={true}
-                      touched={touched.name}
-                      error={errors.name}
-                    />
-                  </div>
+          <div className="card bg-transparent shadow-none border-0">
+            <form className="forms-sample" onSubmit={handleSubmit}>
+              {/* Basic Details */}
+              <div className="card rounded-2">
+                <div className="card-body">
+                  <div className="row">
+                    <div className="col-md-12">
+                      <h5 className="mb-2">Basic Details</h5>
+                    </div>
+                    <div className="form-group col-md-6">
+                      <InputBox
+                        label="Program Name"
+                        name="name"
+                        handleBlur={handleBlur}
+                        handleChange={handleNameChange}
+                        type="text"
+                        placeholder="Enter program name"
+                        value={values.name}
+                        required={true}
+                        touched={touched.name}
+                        error={errors.name}
+                      />
+                    </div>
 
-                  <div className="form-group col-md-6">
-                    <InputBox
-                      label="Program Slug"
-                      name="slug"
-                      handleBlur={handleBlur}
-                      handleChange={(evt) => {
-                        setFieldValue("slug", validateSlug(evt.target.value));
-                      }}
-                      type="text"
-                      placeholder="Enter slug"
-                      value={values.slug}
-                      required={true}
-                      touched={touched.slug}
-                      error={errors.slug}
-                    />
-                  </div>
+                    <div className="form-group col-md-6">
+                      <InputBox
+                        label="Program Slug"
+                        name="slug"
+                        handleBlur={handleBlur}
+                        handleChange={(evt) => {
+                          setFieldValue("slug", validateSlug(evt.target.value));
+                        }}
+                        type="text"
+                        placeholder="Enter slug"
+                        value={values.slug}
+                        required={true}
+                        touched={touched.slug}
+                        error={errors.slug}
+                      />
+                    </div>
 
-                  {/* <div className="form-group col-md-6">
+                    {/* <div className="form-group col-md-6">
                     <label htmlFor="">
                       Gender <span className="text-danger">*</span>{" "}
                     </label>
@@ -588,501 +761,621 @@ export function EditProgram() {
                     ) : null}
                   </div> */}
 
-                  <div className="form-group col-md-6">
-                    <CustomSelect
-                      label="Program Category"
-                      placeholder="Select Category"
-                      name="category"
-                      required={true}
-                      options={categories}
-                      value={values.category}
-                      error={errors.category}
-                      touched={touched.category}
-                      handleChange={(value) => {
-                        setFieldValue("category", value);
-                      }}
-                      handleBlur={() => {
-                        setFieldTouched("category", true);
-                      }}
-                    />
-                  </div>
-                  <div className="form-group col-md-6">
-                    <CustomSelect
-                      label="Program Sub Category"
-                      placeholder="Select sub Category"
-                      name="subCategory"
-                      required={true}
-                      options={subCategories}
-                      value={values.subCategory}
-                      error={errors.subCategory}
-                      touched={touched.subCategory}
-                      handleChange={(value) => {
-                        setFieldValue("subCategory", value);
-                      }}
-                      handleBlur={() => {
-                        setFieldTouched("subCategory", true);
-                      }}
-                    />
-                  </div>
-
-                  <div className="form-group col-md-6">
-                    <InputBox
-                      label="Display Order"
-                      name="displayOrder"
-                      handleBlur={handleBlur}
-                      handleChange={handleNameChange}
-                      type="number"
-                      placeholder="Enter display order"
-                      value={values.displayOrder}
-                      required={true}
-                      touched={touched.displayOrder}
-                      error={errors.displayOrder}
-                    />
-                  </div>
-
-                  <div className="form-group col-md-3">
-                    <label htmlFor="">
-                      Is Trail Program <span className="text-danger">*</span>
-                    </label>
-                    <div className="d-flex gap-3">
-                      <div className="d-flex align-items-center gap-2">
-                        <input
-                          type="radio"
-                          name="isTrial"
-                          id="isTrialTrue"
-                          value={"true"}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          checked={values.isTrial == "true"}
-                        />
-                        <label htmlFor="isTrialTrue" className="mt-2">
-                          Yes
-                        </label>
-                      </div>
-                      <div className="d-flex align-items-center gap-1">
-                        <input
-                          type="radio"
-                          name="isTrial"
-                          id="isTrialFalse"
-                          value={"false"}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          checked={values.isTrial == "false"}
-                        />
-                        <label htmlFor="isTrialFalse" className="mt-2">
-                          No
-                        </label>
-                      </div>
+                    <div className="form-group col-md-6">
+                      <CustomSelect
+                        label="Program Category"
+                        placeholder="Select Category"
+                        name="category"
+                        required={true}
+                        options={categories}
+                        value={values.category}
+                        error={errors.category}
+                        touched={touched.category}
+                        handleChange={(value) => {
+                          setFieldValue("category", value);
+                        }}
+                        handleBlur={() => {
+                          setFieldTouched("category", true);
+                        }}
+                      />
                     </div>
-                    {errors.isTrial && touched.isTrial ? (
-                      <p className="custom-form-error text-danger">
-                        {errors.isTrial}
-                      </p>
-                    ) : null}
-                  </div>
-
-                  <div className="form-group col-md-3">
-                    <label htmlFor="">
-                      Status <span className="text-danger">*</span>
-                    </label>
-                    <div className="d-flex gap-3">
-                      <div className="d-flex align-items-center gap-2">
-                        <input
-                          type="radio"
-                          name="status"
-                          id="true"
-                          value={"true"}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          checked={values.status == "true"}
-                        />
-                        <label htmlFor="true" className="mt-2">
-                          Active
-                        </label>
-                      </div>
-                      <div className="d-flex align-items-center gap-1">
-                        <input
-                          type="radio"
-                          name="status"
-                          id="false"
-                          value={"false"}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          checked={values.status == "false"}
-                        />
-                        <label htmlFor="false" className="mt-2">
-                          Disabled
-                        </label>
-                      </div>
+                    <div className="form-group col-md-6">
+                      <CustomSelect
+                        label="Program Sub Category"
+                        placeholder="Select sub Category"
+                        name="subCategory"
+                        required={true}
+                        options={subCategories}
+                        value={values.subCategory}
+                        error={errors.subCategory}
+                        touched={touched.subCategory}
+                        handleChange={(value) => {
+                          setFieldValue("subCategory", value);
+                        }}
+                        handleBlur={() => {
+                          setFieldTouched("subCategory", true);
+                        }}
+                      />
                     </div>
-                    {errors.status && touched.status ? (
-                      <p className="custom-form-error text-danger">
-                        {errors.status}
-                      </p>
-                    ) : null}
-                  </div>
-                </div>
-              </div>
-            </div>
 
-            {/* Program Description */}
-            <div className="card rounded-2 mt-4">
-              <div className="card-body">
-                <div className="row">
-                  <div className="col-md-12">
-                    <h5 className="mb-2">Program Description</h5>
-                  </div>
-                  <div className="col-md-12 form-group">
-                    <label htmlFor={"descriptions"} className="mb-2">
-                      About the Program
-                    </label>
-                    <CKEditor
-                      editor={ClassicEditor}
-                      data={values.descriptions}
-                      onChange={(event, editor) => {
-                        const data = editor.getData();
-                        setFieldValue("descriptions", data);
-                      }}
-                      onBlur={(event, editor) => {
-                        setFieldTouched("descriptions", true);
-                      }}
-                      onFocus={(event, editor) => {}}
-                      id={"descriptions"}
-                    />
-                    {errors.descriptions && touched.descriptions ? (
-                      <p className="custom-form-error text-danger">
-                        {errors.descriptions}
-                      </p>
-                    ) : null}
-                  </div>
+                    <div className="form-group col-md-6">
+                      <InputBox
+                        label="Display Order"
+                        name="displayOrder"
+                        handleBlur={handleBlur}
+                        handleChange={handleChange}
+                        type="number"
+                        placeholder="Enter display order"
+                        value={values.displayOrder}
+                        required={true}
+                        touched={touched.displayOrder}
+                        error={errors.displayOrder}
+                      />
+                    </div>
 
-                  <div className="col-md-12 form-group">
-                    <label htmlFor={"descriptions"} className="mb-2">
-                      Highlights
-                    </label>
-                    <CKEditor
-                      editor={ClassicEditor}
-                      data={values.highlights}
-                      onChange={(event, editor) => {
-                        const data = editor.getData();
-                        setFieldValue("highlights", data);
-                      }}
-                      onBlur={(event, editor) => {
-                        setFieldTouched("highlights", true);
-                      }}
-                      // onFocus={(event, editor) => {}}
-                      id={"highlights"}
-                    />
-                    {errors.highlights && touched.highlights ? (
-                      <p className="custom-form-error text-danger">
-                        {errors.highlights}
-                      </p>
-                    ) : null}
-                  </div>
-
-                  <div className="col-md-12 form-group">
-                    <label htmlFor={"benefits"} className="mb-2">
-                      What you will get in this Program
-                    </label>
-                    <CKEditor
-                      editor={ClassicEditor}
-                      data={values.benefits}
-                      onChange={(event, editor) => {
-                        const data = editor.getData();
-                        setFieldValue("benefits", data);
-                      }}
-                      onBlur={(event, editor) => {
-                        setFieldTouched("benefits", true);
-                      }}
-                      // onFocus={(event, editor) => {}}
-                      id={"benefits"}
-                    />
-                    {errors.benefits && touched.benefits ? (
-                      <p className="custom-form-error text-danger">
-                        {errors.benefits}
-                      </p>
-                    ) : null}
-                  </div>
-
-                  <div className="col-md-12 form-group">
-                    <label htmlFor={"descriptions"} className="mb-2">
-                      How it Works
-                    </label>
-                    <CKEditor
-                      editor={ClassicEditor}
-                      data={values.howItWorks}
-                      onChange={(event, editor) => {
-                        const data = editor.getData();
-                        setFieldValue("howItWorks", data);
-                      }}
-                      onBlur={(event, editor) => {
-                        setFieldTouched("howItWorks", true);
-                      }}
-                      // onFocus={(event, editor) => {}}
-                      id={"howItWorks"}
-                    />
-                    {errors.howItWorks && touched.howItWorks ? (
-                      <p className="custom-form-error text-danger">
-                        {errors.howItWorks}
-                      </p>
-                    ) : null}
-                  </div>
-
-                  <div className="col-md-12 form-group">
-                    <CustomSelect
-                      label="Program Requirements"
-                      placeholder="Select requirements"
-                      name="requirements"
-                      required={true}
-                      options={programRequirements}
-                      value={values.requirements}
-                      error={errors.requirements}
-                      touched={touched.requirements}
-                      isMulti={true}
-                      handleChange={(value) => {
-                        setFieldValue("requirements", value);
-                      }}
-                      handleBlur={() => {
-                        setFieldTouched("requirements", true);
-                      }}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Program USP */}
-            <div className="card rounded-2 mt-4">
-              <div className="card-body">
-                <div className="row">
-                  <div className="col-md-12 d-flex justify-content-between align-items-center">
-                    <h5 className="mb-2">Program USP</h5>
-                    <button
-                      type="button"
-                      className="btn btn-light"
-                      onClick={handleAddUspFields}
-                    >
-                      <i className="fas fa-plus text-info"></i>
-                    </button>
-                  </div>
-                  <div className="form-group col-md-12">
-                    {uspInputFields.map((feild, index) => (
-                      <div className="row mb-2">
-                        <div className="mb-1 form-group col-md-12">
-                          <label htmlFor={""}>USP Title</label>
-                          <div className="d-flex gap-1">
-                            <input
-                              className="form-control"
-                              value={feild}
-                              onChange={(e) => {
-                                const updatedInputFields = [...uspInputFields];
-                                updatedInputFields[index] = validateTextNumber(
-                                  e.target.value
-                                );
-                                setUspInputFields(updatedInputFields);
-                              }}
-                              placeholder="Enter USP"
-                            />
-
-                            {index != 0 ? (
-                              <button
-                                type="button"
-                                onClick={() => handleRemoveUspFields(index)}
-                                className="btn bg-light border"
-                              >
-                                <i className="fas fa-close text-danger"></i>
-                              </button>
-                            ) : null}
-                          </div>
+                    <div className="form-group col-md-3">
+                      <label htmlFor="">
+                        Is Trail Program <span className="text-danger">*</span>
+                      </label>
+                      <div className="d-flex gap-3">
+                        <div className="d-flex align-items-center gap-2">
+                          <input
+                            type="radio"
+                            name="isTrial"
+                            id="isTrialTrue"
+                            value={"true"}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            checked={values.isTrial == "true"}
+                          />
+                          <label htmlFor="isTrialTrue" className="mt-2">
+                            Yes
+                          </label>
+                        </div>
+                        <div className="d-flex align-items-center gap-1">
+                          <input
+                            type="radio"
+                            name="isTrial"
+                            id="isTrialFalse"
+                            value={"false"}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            checked={values.isTrial == "false"}
+                          />
+                          <label htmlFor="isTrialFalse" className="mt-2">
+                            No
+                          </label>
                         </div>
                       </div>
-                    ))}
+                      {errors.isTrial && touched.isTrial ? (
+                        <p className="custom-form-error text-danger">
+                          {errors.isTrial}
+                        </p>
+                      ) : null}
+                    </div>
+
+                    <div className="form-group col-md-3">
+                      <label htmlFor="">
+                        Status <span className="text-danger">*</span>
+                      </label>
+                      <div className="d-flex gap-3">
+                        <div className="d-flex align-items-center gap-2">
+                          <input
+                            type="radio"
+                            name="status"
+                            id="true"
+                            value={"true"}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            checked={values.status == "true"}
+                          />
+                          <label htmlFor="true" className="mt-2">
+                            Active
+                          </label>
+                        </div>
+                        <div className="d-flex align-items-center gap-1">
+                          <input
+                            type="radio"
+                            name="status"
+                            id="false"
+                            value={"false"}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            checked={values.status == "false"}
+                          />
+                          <label htmlFor="false" className="mt-2">
+                            Disabled
+                          </label>
+                        </div>
+                      </div>
+                      {errors.status && touched.status ? (
+                        <p className="custom-form-error text-danger">
+                          {errors.status}
+                        </p>
+                      ) : null}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* FAQs */}
-            <div className="card rounded-2 mt-4">
-              <div className="card-body">
-                <div className="row">
-                  <div className="col-md-12 d-flex justify-content-between align-items-center">
-                    <h5 className="mb-2">FAQs</h5>
-                    <button
-                      type="button"
-                      className="btn btn-light"
-                      onClick={handleAddFaqsFields}
-                    >
-                      <i className="fas fa-plus text-info"></i>
-                    </button>
+              {/* Build Plan */}
+              <div className="card rounded-2 mt-4">
+                <div className="card-body">
+                  <div className="row">
+                    <div className="col-md-12">
+                      <h5 className="mb-2">Build Plan</h5>
+                    </div>
+
+                    <div className="form-group col-md-6">
+                      <CustomSelect
+                        label="Select Goal"
+                        placeholder="Select goal"
+                        name="goals"
+                        required={true}
+                        options={goals}
+                        value={values.goals}
+                        error={errors.goals}
+                        touched={touched.goals}
+                        isMulti={true}
+                        handleChange={(value) => {
+                          setFieldValue("goals", value);
+                        }}
+                        handleBlur={() => {
+                          setFieldTouched("goals", true);
+                        }}
+                      />
+                    </div>
+
+                    <div className="form-group col-md-6">
+                      <CustomSelect
+                        label="Select Age Ranges"
+                        placeholder="Select age ranges"
+                        name="ageRanges"
+                        required={true}
+                        options={ageRanges}
+                        value={values.ageRanges}
+                        error={errors.ageRanges}
+                        touched={touched.ageRanges}
+                        isMulti={true}
+                        handleChange={(value) => {
+                          setFieldValue("ageRanges", value);
+                        }}
+                        handleBlur={() => {
+                          setFieldTouched("ageRanges", true);
+                        }}
+                      />
+                    </div>
+
+                    <div className="form-group col-md-6">
+                      <CustomSelect
+                        label="Select Yoga Experiences"
+                        placeholder="Select yoga experience"
+                        name="yogaExperiences"
+                        required={true}
+                        options={yogaExperiences}
+                        value={values.yogaExperiences}
+                        error={errors.yogaExperiences}
+                        touched={touched.yogaExperiences}
+                        isMulti={true}
+                        handleChange={(value) => {
+                          setFieldValue("yogaExperiences", value);
+                        }}
+                        handleBlur={() => {
+                          setFieldTouched("yogaExperiences", true);
+                        }}
+                      />
+                    </div>
+
+                    <div className="form-group col-md-6">
+                      <CustomSelect
+                        label="Select Time Slots"
+                        placeholder="Select time slots"
+                        name="timeSlots"
+                        required={true}
+                        options={timeSlots}
+                        value={values.timeSlots}
+                        error={errors.timeSlots}
+                        touched={touched.timeSlots}
+                        isMulti={true}
+                        handleChange={(value) => {
+                          setFieldValue("timeSlots", value);
+                        }}
+                        handleBlur={() => {
+                          setFieldTouched("timeSlots", true);
+                        }}
+                      />
+                    </div>
+
+                    <div className="form-group col-md-6">
+                      <CustomSelect
+                        label="Select Budgets"
+                        placeholder="Select budget"
+                        name="budgets"
+                        required={true}
+                        options={budgets}
+                        value={values.budgets}
+                        error={errors.budgets}
+                        touched={touched.budgets}
+                        isMulti={true}
+                        handleChange={(value) => {
+                          setFieldValue("budgets", value);
+                        }}
+                        handleBlur={() => {
+                          setFieldTouched("budgets", true);
+                        }}
+                      />
+                    </div>
                   </div>
+                </div>
+              </div>
 
-                  <div className="form-group col-md-12">
-                    {faqsInputFields.length &&
-                      faqsInputFields.map((feild, index) => (
+              {/* Program Description */}
+              <div className="card rounded-2 mt-4">
+                <div className="card-body">
+                  <div className="row">
+                    <div className="col-md-12">
+                      <h5 className="mb-2">Program Description</h5>
+                    </div>
+                    <div className="col-md-12 form-group">
+                      <label htmlFor={"descriptions"} className="mb-2">
+                        About the Program
+                      </label>
+                      <CKEditor
+                        editor={ClassicEditor}
+                        data={values.descriptions}
+                        onChange={(event, editor) => {
+                          const data = editor.getData();
+                          setFieldValue("descriptions", data);
+                        }}
+                        onBlur={(event, editor) => {
+                          setFieldTouched("descriptions", true);
+                        }}
+                        onFocus={(event, editor) => {}}
+                        id={"descriptions"}
+                      />
+                      {errors.descriptions && touched.descriptions ? (
+                        <p className="custom-form-error text-danger">
+                          {errors.descriptions}
+                        </p>
+                      ) : null}
+                    </div>
+
+                    <div className="col-md-12 form-group">
+                      <label htmlFor={"descriptions"} className="mb-2">
+                        Highlights
+                      </label>
+                      <CKEditor
+                        editor={ClassicEditor}
+                        data={values.highlights}
+                        onChange={(event, editor) => {
+                          const data = editor.getData();
+                          setFieldValue("highlights", data);
+                        }}
+                        onBlur={(event, editor) => {
+                          setFieldTouched("highlights", true);
+                        }}
+                        // onFocus={(event, editor) => {}}
+                        id={"highlights"}
+                      />
+                      {errors.highlights && touched.highlights ? (
+                        <p className="custom-form-error text-danger">
+                          {errors.highlights}
+                        </p>
+                      ) : null}
+                    </div>
+
+                    <div className="col-md-12 form-group">
+                      <label htmlFor={"benefits"} className="mb-2">
+                        What you will get in this Program
+                      </label>
+                      <CKEditor
+                        editor={ClassicEditor}
+                        data={values.benefits}
+                        onChange={(event, editor) => {
+                          const data = editor.getData();
+                          setFieldValue("benefits", data);
+                        }}
+                        onBlur={(event, editor) => {
+                          setFieldTouched("benefits", true);
+                        }}
+                        // onFocus={(event, editor) => {}}
+                        id={"benefits"}
+                      />
+                      {errors.benefits && touched.benefits ? (
+                        <p className="custom-form-error text-danger">
+                          {errors.benefits}
+                        </p>
+                      ) : null}
+                    </div>
+
+                    <div className="col-md-12 form-group">
+                      <label htmlFor={"descriptions"} className="mb-2">
+                        How it Works
+                      </label>
+                      <CKEditor
+                        editor={ClassicEditor}
+                        data={values.howItWorks}
+                        onChange={(event, editor) => {
+                          const data = editor.getData();
+                          setFieldValue("howItWorks", data);
+                        }}
+                        onBlur={(event, editor) => {
+                          setFieldTouched("howItWorks", true);
+                        }}
+                        // onFocus={(event, editor) => {}}
+                        id={"howItWorks"}
+                      />
+                      {errors.howItWorks && touched.howItWorks ? (
+                        <p className="custom-form-error text-danger">
+                          {errors.howItWorks}
+                        </p>
+                      ) : null}
+                    </div>
+
+                    <div className="col-md-12 form-group">
+                      <CustomSelect
+                        label="Program Requirements"
+                        placeholder="Select requirements"
+                        name="requirements"
+                        required={true}
+                        options={programRequirements}
+                        value={values.requirements}
+                        error={errors.requirements}
+                        touched={touched.requirements}
+                        isMulti={true}
+                        handleChange={(value) => {
+                          setFieldValue("requirements", value);
+                        }}
+                        handleBlur={() => {
+                          setFieldTouched("requirements", true);
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Program USP */}
+              <div className="card rounded-2 mt-4">
+                <div className="card-body">
+                  <div className="row">
+                    <div className="col-md-12 d-flex justify-content-between align-items-center">
+                      <h5 className="mb-2">Program USP</h5>
+                      <button
+                        type="button"
+                        className="btn btn-light"
+                        onClick={handleAddUspFields}
+                      >
+                        <i className="fas fa-plus text-info"></i>
+                      </button>
+                    </div>
+                    <div className="form-group col-md-12">
+                      {uspInputFields.map((feild, index) => (
                         <div className="row mb-2">
-                          <div className="col-md-12">
-                            <label htmlFor={""}>Question</label>
-                          </div>
-                          <div
-                            className="mb-1 form-group col-md-12 d-flex gap-1"
-                            key={index}
-                          >
-                            <input
-                              className="form-control"
-                              value={feild.question}
-                              onChange={(e) => {
-                                const updatedInputFields = [...faqsInputFields];
-                                updatedInputFields[index]["question"] =
-                                  e.target.value;
-                                setFaqsInputFields(updatedInputFields);
-                              }}
-                              placeholder="Enter Question"
-                            />
-
-                            {index != 0 ? (
-                              <button
-                                type="button"
-                                onClick={() => handleRemoveFaqsFields(index)}
-                                className="btn bg-light border"
-                              >
-                                <i className="fas fa-close text-danger"></i>
-                              </button>
-                            ) : null}
-                          </div>
-
                           <div className="mb-1 form-group col-md-12">
-                            <label htmlFor={""}>Answer</label>
-                            <CKEditor
-                              editor={ClassicEditor}
-                              data={feild.answer}
-                              onChange={(event, editor) => {
-                                const data = editor.getData();
-                                const updatedInputFields = [...faqsInputFields];
-                                updatedInputFields[index]["answer"] = data;
-                                setFaqsInputFields(updatedInputFields);
-                              }}
-                              id={"requirements"}
-                            />
+                            <label htmlFor={""}>USP Title</label>
+                            <div className="d-flex gap-1">
+                              <input
+                                className="form-control"
+                                value={feild}
+                                onChange={(e) => {
+                                  const updatedInputFields = [
+                                    ...uspInputFields,
+                                  ];
+                                  updatedInputFields[index] =
+                                    validateTextNumber(e.target.value);
+                                  setUspInputFields(updatedInputFields);
+                                }}
+                                placeholder="Enter USP"
+                              />
 
-                            <p className="custom-form-error text-danger">
-                              {feild?.error}
-                            </p>
+                              {index != 0 ? (
+                                <button
+                                  type="button"
+                                  onClick={() => handleRemoveUspFields(index)}
+                                  className="btn bg-light border"
+                                >
+                                  <i className="fas fa-close text-danger"></i>
+                                </button>
+                              ) : null}
+                            </div>
                           </div>
                         </div>
                       ))}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* Meta Details */}
-            <div className="card rounded-2 mt-4">
-              <div className="card-body">
-                <div className="row">
-                  <div className="col-md-12">
-                    <h5 className="mb-2">Meta Details</h5>
-                  </div>
-                  <div className="form-group col-md-12">
-                    <InputBox
-                      label="Meta Title"
-                      name="metaTitle"
-                      handleBlur={handleBlur}
-                      handleChange={handleChange}
-                      type="text"
-                      placeholder="Enter meta title"
-                      value={values.metaTitle}
-                      touched={touched.metaTitle}
-                      error={errors.metaTitle}
-                    />
-                  </div>
-                  <div className="form-group col-md-12">
-                    <TextareaBox
-                      label="Meta Description"
-                      name="metaDescription"
-                      handleBlur={handleBlur}
-                      handleChange={handleChange}
-                      placeholder="Enter meta description"
-                      value={values.metaDescription}
-                      touched={touched.metaDescription}
-                      error={errors.metaDescription}
-                    />
-                  </div>
+              {/* FAQs */}
+              <div className="card rounded-2 mt-4">
+                <div className="card-body">
+                  <div className="row">
+                    <div className="col-md-12 d-flex justify-content-between align-items-center">
+                      <h5 className="mb-2">FAQs</h5>
+                      <button
+                        type="button"
+                        className="btn btn-light"
+                        onClick={handleAddFaqsFields}
+                      >
+                        <i className="fas fa-plus text-info"></i>
+                      </button>
+                    </div>
 
-                  <div className="form-group col-md-12">
-                    <TextareaBox
-                      label="Meta Keywords"
-                      name="metaKeywords"
-                      handleBlur={handleBlur}
-                      handleChange={handleChange}
-                      placeholder="Enter meta keywords (comma saparated values)"
-                      value={values.metaKeywords}
-                      touched={touched.metaKeywords}
-                      error={errors.metaKeywords}
-                    />
+                    <div className="form-group col-md-12">
+                      {faqsInputFields.length
+                        ? faqsInputFields.map((feild, index) => (
+                            <div className="row mb-2">
+                              <div className="col-md-12">
+                                <label htmlFor={""}>Question</label>
+                              </div>
+                              <div
+                                className="mb-1 form-group col-md-12 d-flex gap-1"
+                                key={index}
+                              >
+                                <input
+                                  className="form-control"
+                                  value={feild.question}
+                                  onChange={(e) => {
+                                    const updatedInputFields = [
+                                      ...faqsInputFields,
+                                    ];
+                                    updatedInputFields[index]["question"] =
+                                      e.target.value;
+                                    setFaqsInputFields(updatedInputFields);
+                                  }}
+                                  placeholder="Enter Question"
+                                />
+
+                                {index != 0 ? (
+                                  <button
+                                    type="button"
+                                    onClick={() =>
+                                      handleRemoveFaqsFields(index)
+                                    }
+                                    className="btn bg-light border"
+                                  >
+                                    <i className="fas fa-close text-danger"></i>
+                                  </button>
+                                ) : null}
+                              </div>
+
+                              <div className="mb-1 form-group col-md-12">
+                                <label htmlFor={""}>Answer</label>
+                                <CKEditor
+                                  editor={ClassicEditor}
+                                  data={feild.answer}
+                                  onChange={(event, editor) => {
+                                    const data = editor.getData();
+                                    const updatedInputFields = [
+                                      ...faqsInputFields,
+                                    ];
+                                    updatedInputFields[index]["answer"] = data;
+                                    setFaqsInputFields(updatedInputFields);
+                                  }}
+                                  id={"requirements"}
+                                />
+
+                                <p className="custom-form-error text-danger">
+                                  {feild?.error}
+                                </p>
+                              </div>
+                            </div>
+                          ))
+                        : null}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* Program Images */}
-            <div className="card rounded-2 mt-4">
-              <div className="card-body">
-                <div className="row">
-                  <div className="col-md-12">
-                    <h5 className="mb-3">Program Images</h5>
-                  </div>
-                  <div className="form-group col-md-8">
-                    <label htmlFor={"defaultImageFile"}>
-                      Default Image <span className="text-danger"> *</span>
-                    </label>
-                    <div className="d-flex gap-2">
-                      <input
-                        type="file"
-                        name="defaultImageFile"
-                        id="defaultImageFile"
-                        onChange={(evt) => {
-                          handleUploadProfilePic(evt);
-                        }}
-                        className="form-control"
+              {/* Meta Details */}
+              <div className="card rounded-2 mt-4">
+                <div className="card-body">
+                  <div className="row">
+                    <div className="col-md-12">
+                      <h5 className="mb-2">Meta Details</h5>
+                    </div>
+                    <div className="form-group col-md-12">
+                      <InputBox
+                        label="Meta Title"
+                        name="metaTitle"
+                        handleBlur={handleBlur}
+                        handleChange={handleChange}
+                        type="text"
+                        placeholder="Enter meta title"
+                        value={values.metaTitle}
+                        touched={touched.metaTitle}
+                        error={errors.metaTitle}
                       />
-                      {values.defaultImage ? (
-                        <Link to={`${values.defaultImage}`} target="_blank">
-                          <img
-                            className="img"
-                            height={43}
-                            width={43}
-                            src={`${values.defaultImage}`}
-                          />
-                        </Link>
-                      ) : null}
-                      {values.defaultImage ? (
-                        <button
-                          type="button"
-                          className="btn p-1"
-                          onClick={(evt) => {
-                            handleDeleteProfilePic(
-                              evt,
-                              getFileNameFromUrl(values.defaultImage)
-                            );
+                    </div>
+                    <div className="form-group col-md-12">
+                      <TextareaBox
+                        label="Meta Description"
+                        name="metaDescription"
+                        handleBlur={handleBlur}
+                        handleChange={handleChange}
+                        placeholder="Enter meta description"
+                        value={values.metaDescription}
+                        touched={touched.metaDescription}
+                        error={errors.metaDescription}
+                      />
+                    </div>
+
+                    <div className="form-group col-md-12">
+                      <TextareaBox
+                        label="Meta Keywords"
+                        name="metaKeywords"
+                        handleBlur={handleBlur}
+                        handleChange={handleChange}
+                        placeholder="Enter meta keywords (comma saparated values)"
+                        value={values.metaKeywords}
+                        touched={touched.metaKeywords}
+                        error={errors.metaKeywords}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Program Images */}
+              <div className="card rounded-2 mt-4">
+                <div className="card-body">
+                  <div className="row">
+                    <div className="col-md-12">
+                      <h5 className="mb-3">Program Images</h5>
+                    </div>
+                    <div className="form-group col-md-8">
+                      <label htmlFor={"defaultImageFile"}>
+                        Default Image <span className="text-danger"> *</span>
+                      </label>
+                      <div className="d-flex gap-2">
+                        <input
+                          type="file"
+                          name="defaultImageFile"
+                          id="defaultImageFile"
+                          onChange={(evt) => {
+                            handleUploadProfilePic(evt);
                           }}
-                        >
-                          <i className="fa fa-trash text-danger"></i>
-                        </button>
+                          className="form-control"
+                        />
+                        {values.defaultImage ? (
+                          <Link to={`${values.defaultImage}`} target="_blank">
+                            <img
+                              className="img"
+                              height={43}
+                              width={43}
+                              src={`${values.defaultImage}`}
+                            />
+                          </Link>
+                        ) : null}
+                        {values.defaultImage ? (
+                          <button
+                            type="button"
+                            className="btn p-1"
+                            onClick={(evt) => {
+                              handleDeleteProfilePic(
+                                evt,
+                                getFileNameFromUrl(values.defaultImage)
+                              );
+                            }}
+                          >
+                            <i className="fa fa-trash text-danger"></i>
+                          </button>
+                        ) : null}
+                      </div>
+                      {touched.defaultImage && errors.defaultImage ? (
+                        <p className="custom-form-error text-danger">
+                          {errors.defaultImage}
+                        </p>
                       ) : null}
                     </div>
-                    {touched.defaultImage && errors.defaultImage ? (
-                      <p className="custom-form-error text-danger">
-                        {errors.defaultImage}
-                      </p>
-                    ) : null}
                   </div>
-                </div>
 
-                <SubmitButton loading={false} text="Update Program" />
+                  <SubmitButton loading={false} text="Update Program" />
+                </div>
               </div>
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
       </div>
     </div>

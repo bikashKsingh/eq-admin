@@ -1,14 +1,35 @@
+// // validateNumber
+// export function validateNumber(value: string): string {
+//   // Get the current value of the input
+//   let inputValue = value;
+
+//   // Create a regular expression pattern to allow only numbers
+//   const regexPattern = /^[0-9]*$/;
+
+//   if (!regexPattern.test(inputValue)) {
+//     // If it doesn't match, remove the invalid characters
+//     inputValue = inputValue.replace(/[^0-9]/g, "");
+//   }
+
+//   return inputValue;
+// }
+
 // validateNumber
 export function validateNumber(value: string): string {
   // Get the current value of the input
   let inputValue = value;
 
-  // Create a regular expression pattern to allow only numbers
-  const regexPattern = /^[0-9]*$/;
+  // Create a regular expression pattern to allow only numbers and a single decimal point
+  const regexPattern = /^[0-9]*\.?[0-9]*$/;
 
   if (!regexPattern.test(inputValue)) {
-    // If it doesn't match, remove the invalid characters
-    inputValue = inputValue.replace(/[^0-9]/g, "");
+    // If it doesn't match, remove the invalid characters while keeping one decimal point
+    inputValue = inputValue.replace(/[^0-9.]/g, "");
+    // Ensure only one decimal point exists in the value
+    const parts = inputValue.split(".");
+    if (parts.length > 2) {
+      inputValue = parts[0] + "." + parts.slice(1).join("");
+    }
   }
 
   return inputValue;

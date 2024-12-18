@@ -254,8 +254,12 @@ export function UserDetails() {
                     <table className="table table-sm">
                       <tbody>
                         <tr>
-                          <td scope="row">Name</td>
-                          <td>{userDetails?.name}</td>
+                          <td scope="row">First Name</td>
+                          <td>{userDetails?.firstName}</td>
+                        </tr>
+                        <tr>
+                          <td scope="row">Last Name</td>
+                          <td>{userDetails?.lastName}</td>
                         </tr>
                         <tr>
                           <td scope="row">Email</td>
@@ -313,33 +317,75 @@ export function UserDetails() {
                   <div className="collapse mt-2 show" id="trainerAddress">
                     <div className="card card-body shadow-none p-2">
                       <table className="table table-sm">
-                        {usersBooking?.length}
-                        {/* <tbody>
+                        <thead>
                           <tr>
-                            <td scope="row">Address</td>
-                            <td>{userDetails?.address}</td>
+                            <th>Program</th>
+                            <th>Plan</th>
+                            <th>Booking Date</th>
+                            <th>Trainer</th>
+                            <th>Booking Status</th>
+                            <th></th>
                           </tr>
-                          <tr>
-                            <td scope="row">Locality</td>
-                            <td>{userDetails?.locality}</td>
-                          </tr>
-                          <tr>
-                            <td scope="row">State</td>
-                            <td>{userDetails?.state}</td>
-                          </tr>
-                          <tr>
-                            <td scope="row">City</td>
-                            <td>{userDetails?.city}</td>
-                          </tr>
-                          <tr>
-                            <td scope="row">Country</td>
-                            <td>{userDetails?.country}</td>
-                          </tr>
-                          <tr>
-                            <td scope="row">Pincode</td>
-                            <td>{userDetails?.pincode}</td>
-                          </tr>
-                        </tbody> */}
+                        </thead>
+                        <tbody>
+                          {usersBooking?.map((item: any, index: number) => {
+                            return (
+                              <tr>
+                                <td>{item?.program?.name}</td>
+                                <td>{item?.plan?.name}</td>
+                                <td>
+                                  {moment(item?.createdAt).format("DD-MM-YYYY")}
+                                </td>
+                                <td>{item?.trainer?.name || "Not Assigned"}</td>
+                                <td>{item?.bookingStatus}</td>
+                                <td>
+                                  <div className="d-flex gap-1">
+                                    {/* <Link
+                                      className="p-2 bg-light"
+                                      to={
+                                        {
+                                          // pathname: `/users/edit/${value}`,
+                                        }
+                                      }
+                                    >
+                                      <span
+                                        className="fas fa-pencil-alt"
+                                        aria-hidden="true"
+                                      ></span>
+                                    </Link> */}
+
+                                    <Link
+                                      className="p-2 bg-light"
+                                      to={{
+                                        pathname: `/users/booking/planDetails/${item?._id}`,
+                                      }}
+                                    >
+                                      <span
+                                        className="fas fa-eye text-warning"
+                                        aria-hidden="true"
+                                      ></span>
+                                    </Link>
+
+                                    <button
+                                      type="button"
+                                      className="btn p-2 bg-light"
+                                      data-toggle="modal"
+                                      data-target="#deleteModal"
+                                      onClick={() => {
+                                        // handleDeleteData(value);
+                                      }}
+                                    >
+                                      <span
+                                        className="fas fa-trash-alt text-danger"
+                                        aria-hidden="true"
+                                      ></span>
+                                    </button>
+                                  </div>
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
                       </table>
                     </div>
                   </div>

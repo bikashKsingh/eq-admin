@@ -26,6 +26,13 @@ export const addProgramSchema = Yup.object({
   metaDescription: Yup.string().label("Meta Description"),
   metaKeywords: Yup.string().label("Meta Keywords"),
   status: Yup.string().required().label("Status"),
+
+  goals: Yup.array().label("Goals"),
+  ageRanges: Yup.array().label("Age Ranges"),
+  isInjured: Yup.string().label("IS Injured"),
+  yogaExperiences: Yup.array().label("Yoga Experiences"),
+  timeSlots: Yup.array().label("Time Slots"),
+  budgets: Yup.array().label("Budgets"),
 });
 
 export const programInitialValues: ProgramValues = {
@@ -48,6 +55,13 @@ export const programInitialValues: ProgramValues = {
   metaDescription: "",
   metaKeywords: "",
   status: "true",
+
+  goals: null,
+  ageRanges: null,
+  isInjured: "false",
+  yogaExperiences: null,
+  timeSlots: null,
+  budgets: null,
 };
 
 export interface ProgramValues {
@@ -80,6 +94,38 @@ export interface ProgramValues {
   metaDescription: string;
   metaKeywords: string;
   status: string;
+
+  goals:
+    | {
+        label: string;
+        value: string;
+      }[]
+    | null;
+  ageRanges:
+    | {
+        label: string;
+        value: string;
+      }[]
+    | null;
+  isInjured: string;
+  yogaExperiences:
+    | {
+        label: string;
+        value: string;
+      }[]
+    | null;
+  timeSlots:
+    | {
+        label: string;
+        value: string;
+      }[]
+    | null;
+  budgets:
+    | {
+        label: string;
+        value: string;
+      }[]
+    | null;
 }
 
 export type FileType = {

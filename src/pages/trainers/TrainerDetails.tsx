@@ -16,7 +16,7 @@ export function TrainerDetails() {
     certificates: [],
   });
 
-  // get trainer specialities
+  // get trainer details
   useEffect(
     function () {
       async function getData(id: string) {
@@ -92,7 +92,7 @@ export function TrainerDetails() {
                       <h6 className="px-0 pt-2">{trainerDetails?.name}</h6>
                       <p>
                         <span className="badge bg-warning rounded">
-                          {trainerDetails?.designation}
+                          {trainerDetails?.designation?.title}
                         </span>
                       </p>
                       <p>{`${trainerDetails?.address}, ${trainerDetails?.locality}, ${trainerDetails?.city}, ${trainerDetails?.state}, ${trainerDetails?.pincode}, ${trainerDetails?.country}`}</p>
@@ -257,7 +257,9 @@ export function TrainerDetails() {
                         </tr>
                         <tr>
                           <td scope="row">Bio</td>
-                          <td>{trainerDetails?.bio || "N/A"}</td>
+                          <td>
+                            <p>{trainerDetails?.bio || "N/A"}</p>
+                          </td>
                         </tr>
 
                         <tr>

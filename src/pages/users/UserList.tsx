@@ -62,9 +62,11 @@ export function UserList() {
   );
 
   type Record = {
-    name: string;
+    firstName: string;
+    lastName: string;
     mobile: string;
     email: string;
+    totalBookings: number;
     createdAt: string;
     status: boolean;
     validity: string;
@@ -95,8 +97,12 @@ export function UserList() {
       },
 
       {
-        Header: "NAME",
-        accessor: "name",
+        Header: "FIRST NAME",
+        accessor: "firstName",
+      },
+      {
+        Header: "LAST NAME",
+        accessor: "lastName",
       },
       {
         Header: "MOBILE",
@@ -106,7 +112,10 @@ export function UserList() {
         Header: "EMAIL",
         accessor: "email",
       },
-
+      {
+        Header: "BOOKINGS",
+        accessor: "totalBookings",
+      },
       {
         Header: "CREATED AT",
         accessor: "createdAt",
@@ -183,9 +192,11 @@ export function UserList() {
   const data = React.useMemo(() => {
     return records.map((data) => {
       return {
-        name: data.name,
+        firstName: data.firstName,
+        lastName: data.lastName,
         mobile: data.mobile,
         email: data.email,
+        totalBookings: data.totalBookings ? data.totalBookings : "N/A",
         createdAt: data.createdAt,
         status: data.status,
         validity: `${moment(data.startDate).format("DD-MMM-YYYY")} to ${moment(

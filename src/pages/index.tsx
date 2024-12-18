@@ -4,6 +4,25 @@ export * from "./adminAuth/ForgotPassword";
 export * from "./adminAuth/VerifyOtp";
 export * from "./adminAuth/CreateNewPassword";
 
+// Trainer Auth
+export * from "./trainerPages/auth/TrainerLogin";
+export * from "./trainerPages/auth/TrainerForgotPassword";
+export * from "./trainerPages/auth/TrainerVerifyOtp";
+export * from "./trainerPages/auth/TrainerCreateNewPassword";
+
+// Trainer Dashboard
+export * from "./trainerPages/dashboard/TrainerDashboard";
+export * from "./trainerPages/myProfile/TrainerProfile";
+export * from "./trainerPages/myProfile/UpdateTrainerProfile";
+
+// Trainer's Booking
+export * from "./trainerPages/bookings/TrainerBookingList";
+export * from "./trainerPages/bookings/TrainerBookingDetails";
+
+// Trainer's User
+export * from "./trainerPages/users/TrainerUserList";
+export * from "./trainerPages/users/TrainerUserDetails";
+
 // PaymentSettings
 export * from "./paymentSettings/AddPaymentSetting";
 export * from "./paymentSettings/PaymentSettingList";
@@ -55,11 +74,17 @@ export * from "./users/AddUser";
 export * from "./users/UserList";
 export * from "./users/EditUser";
 export * from "./users/UserDetails";
+export * from "./users/UserBookingPlanDetails";
 
 // Program Requirement
 export * from "./programRequirement/AddProgramRequirement";
 export * from "./programRequirement/EditProgramRequirement";
 export * from "./programRequirement/ProgramRequirementList";
+
+// Plan Type
+export * from "./planTypes/AddPlanType";
+export * from "./planTypes/EditPlanType";
+export * from "./planTypes/PlanTypeList";
 
 // Plans
 export * from "./plans/AddPlan";
@@ -83,6 +108,12 @@ export * from "./program/ProgramList";
 export * from "./program/EditProgram";
 export * from "./program/ProgramDetails";
 
+// Bookings
+export * from "./bookings/AddBooking";
+export * from "./bookings/BookingList";
+export * from "./bookings/EditBooking";
+export * from "./bookings/BookingDetails";
+
 // Document Format
 export * from "./documentFormat/AddDocumentFormat";
 export * from "./documentFormat/DocumentFormatList";
@@ -92,6 +123,31 @@ export * from "./documentFormat/EditDocumentFormat";
 export * from "./kycDocument/AddKycDocument";
 export * from "./kycDocument/KycDocumentList";
 export * from "./kycDocument/EditKycDocument";
+
+// Goals
+export * from "./goals/AddGoal";
+export * from "./goals/GoalList";
+export * from "./goals/EditGoal";
+
+// Age ranges
+export * from "./ageRanges/AddAgeRange";
+export * from "./ageRanges/AgeRangeList";
+export * from "./ageRanges/EditAgeRange";
+
+// Yoga Experience
+export * from "./yogaExperiences/AddYogaExperience";
+export * from "./yogaExperiences/YogaExperienceList";
+export * from "./yogaExperiences/EditYogaExperience";
+
+// Budgets
+export * from "./budgets/AddBudget";
+export * from "./budgets/BudgetList";
+export * from "./budgets/EditBudget";
+
+// Time Slots
+export * from "./timeSlots/AddTimeSloat";
+export * from "./timeSlots/TimeSloatList";
+export * from "./timeSlots/EditTimeSloat";
 
 // File Details
 export * from "./fileDetails/ViewFile";

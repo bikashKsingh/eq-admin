@@ -26,6 +26,7 @@ export function EditProgramPlan() {
   const [plans, setPlans] = useState<any[]>([]);
 
   const [loading, setLoading] = useState<boolean>(false);
+  const [planTypes, setPlanTypes] = useState<any[]>([]);
 
   const [programDetails, setProgramDetails] = useState<any>(null);
 
@@ -48,6 +49,7 @@ export function EditProgramPlan() {
         ...values,
         program: programDetails._id,
         plan: values?.plan?.value,
+        planType: values?.planType?.value,
       };
 
       const apiResponse = await put(`/programPlans/${id}`, newValue);
@@ -82,7 +84,7 @@ export function EditProgramPlan() {
   //   [id]
   // );
 
-  // get planed
+  // get plan
   useEffect(function () {
     async function getData() {
       const apiResponse = await get("/plans", true);
@@ -123,6 +125,11 @@ export function EditProgramPlan() {
             value: apiData.plan._id,
           };
 
+          apiData.planType = {
+            label: apiData?.planType?.title,
+            value: apiData?.planType?._id,
+          };
+
           setProgramDetails(apiData.program);
           delete apiData.program;
           setValues(apiData);
@@ -136,6 +143,24 @@ export function EditProgramPlan() {
     },
     [id]
   );
+
+  // get plan type
+  useEffect(function () {
+    async function getData() {
+      const apiResponse = await get("/planTypes", true);
+      if (apiResponse?.status == 200) {
+        const modifiedValue = apiResponse?.body?.map((value: any) => {
+          return {
+            label: value.title,
+            value: value._id,
+          };
+        });
+        setPlanTypes(modifiedValue);
+      }
+    }
+
+    getData();
+  }, []);
 
   return (
     <div className="content-wrapper">
@@ -166,7 +191,7 @@ export function EditProgramPlan() {
             <div className="card rounded-2">
               <div className="card-body">
                 <div className="row">
-                  <div className="form-group col-md-6">
+                  {/* <div className="form-group col-md-6">
                     <InputBox
                       label="Program Name"
                       name="name"
@@ -179,6 +204,26 @@ export function EditProgramPlan() {
                       touched={false}
                       error={""}
                       readonly={true}
+                    />
+                  </div> */}
+
+                  <div className="form-group col-md-6">
+                    <CustomSelect
+                      label="Select Plan Type"
+                      placeholder="Select plan type"
+                      name="planType"
+                      required={true}
+                      options={planTypes}
+                      value={values.planType}
+                      error={errors.planType}
+                      touched={touched.planType}
+                      isMulti={false}
+                      handleChange={(value) => {
+                        setFieldValue("planType", value);
+                      }}
+                      handleBlur={() => {
+                        setFieldTouched("planType", true);
+                      }}
                     />
                   </div>
 
@@ -312,6 +357,21 @@ export function EditProgramPlan() {
                       required={true}
                       touched={touched.planDuration}
                       error={errors.planDuration}
+                    />
+                  </div>
+
+                  <div className="form-group col-md-6">
+                    <InputBox
+                      label="Display Order"
+                      name="displayOrder"
+                      handleBlur={handleBlur}
+                      handleChange={handleChange}
+                      type="number"
+                      placeholder="Enter display order"
+                      value={values?.displayOrder}
+                      required={true}
+                      touched={touched.displayOrder}
+                      error={errors.displayOrder}
                     />
                   </div>
 
