@@ -29,7 +29,16 @@ export function InputBox(props: PropsType) {
 type PropsType = {
   label: string;
   placeholder?: string;
-  type: "number" | "text" | "email" | "tel" | "date" | "password" | "url";
+  type:
+    | "number"
+    | "text"
+    | "email"
+    | "tel"
+    | "date"
+    | "password"
+    | "url"
+    | "time"
+    | "datetime-local";
   name: string;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleBlur: (e: React.FocusEvent<HTMLInputElement>) => void;

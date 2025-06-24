@@ -212,3 +212,27 @@
   top: 23px; /* Adjust these values as needed */
   left: 0;
 }
+
+/* for date range picker */
+/* Highlight the selected date range */
+.rdrSelected {
+  background-color: #4caf50 !important; /* Match the rangeColors prop */
+  color: #ffffff !important; /* White text for better contrast */
+}
+
+/* Highlight the preview date */
+.rdrDayHovered .rdrDayNumber span {
+  background-color: rgba(
+    76,
+    175,
+    80,
+    0.3
+  ) !important; /* Light green for hover effect */
+  color: #000 !important;
+}
+
+/* Style for the start and end dates */
+.rdrDayStartPreview,
+.rdrDayEndPreview {
+  border: 2px solid #4caf50 !important; /* Border for start and end dates */
+}

@@ -242,7 +242,7 @@ export function AddCategory() {
                     />
                   </div>
 
-                  <div className="form-group col-md-8">
+                  <div className="form-group col-md-7">
                     <label htmlFor={"imageFile"}>
                       Category Image <span className="text-danger"> *</span>
                     </label>
@@ -286,6 +286,21 @@ export function AddCategory() {
                         {errors.image}
                       </p>
                     ) : null}
+                  </div>
+
+                  <div className="form-group col-md-5">
+                    <InputBox
+                      label="Display Order"
+                      name="displayOrder"
+                      handleBlur={handleBlur}
+                      handleChange={handleChange}
+                      type="number"
+                      placeholder="Enter display order"
+                      value={values?.displayOrder}
+                      required={true}
+                      touched={touched.displayOrder}
+                      error={errors.displayOrder}
+                    />
                   </div>
 
                   <div className="form-group col-md-12">
@@ -353,7 +368,8 @@ export function AddCategory() {
                               onChange={(e) => {
                                 const updatedInputFields = [...uspInputFields];
                                 updatedInputFields[index]["title"] =
-                                  validateTextNumber(e.target.value);
+                                  e.target.value;
+                                // validateTextNumber(e.target.value);
                                 setUspInputFields(updatedInputFields);
                               }}
                               placeholder="USP Title"

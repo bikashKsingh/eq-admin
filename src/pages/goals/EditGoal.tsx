@@ -263,6 +263,21 @@ export function EditGoal() {
                     ) : null}
                   </div>
 
+                  <div className="form-group col-md-5">
+                    <InputBox
+                      label="Display Order"
+                      name="displayOrder"
+                      handleBlur={handleBlur}
+                      handleChange={handleChange}
+                      type="number"
+                      placeholder="Enter display order"
+                      value={values?.displayOrder}
+                      required={true}
+                      touched={touched.displayOrder}
+                      error={errors.displayOrder}
+                    />
+                  </div>
+
                   <div className="form-group col-md-8">
                     <label htmlFor={"imageFile"}>
                       Goal Icon <span className="text-danger"> *</span>

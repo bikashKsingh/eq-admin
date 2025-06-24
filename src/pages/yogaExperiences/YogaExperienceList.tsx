@@ -62,6 +62,7 @@ export function YogaExperienceList() {
 
   type Record = {
     title: string;
+    displayOrder: string;
     createdAt: string;
     status: boolean;
     id: string;
@@ -93,6 +94,11 @@ export function YogaExperienceList() {
       {
         Header: "TITLE",
         accessor: "title",
+      },
+
+      {
+        Header: "DISPLAY ORDER",
+        accessor: "displayOrder",
       },
 
       {
@@ -159,6 +165,7 @@ export function YogaExperienceList() {
     return records.map((data) => {
       return {
         title: data.title,
+        displayOrder: data.displayOrder,
         createdAt: data.createdAt,
         status: data.status,
         id: data._id,

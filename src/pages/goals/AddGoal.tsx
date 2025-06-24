@@ -190,6 +190,21 @@ export function AddGoal() {
                     />
                   </div>
 
+                  <div className="form-group col-md-5">
+                    <InputBox
+                      label="Display Order"
+                      name="displayOrder"
+                      handleBlur={handleBlur}
+                      handleChange={handleChange}
+                      type="number"
+                      placeholder="Enter display order"
+                      value={values?.displayOrder}
+                      required={true}
+                      touched={touched.displayOrder}
+                      error={errors.displayOrder}
+                    />
+                  </div>
+
                   <div className="form-group col-md-6">
                     <label htmlFor="">Status</label>
                     <div className="d-flex gap-3">
@@ -229,7 +244,7 @@ export function AddGoal() {
                     ) : null}
                   </div>
 
-                  <div className="form-group col-md-8">
+                  <div className="form-group col-md-6">
                     <label htmlFor={"imageFile"}>
                       Goal Icon <span className="text-danger"> *</span>
                     </label>

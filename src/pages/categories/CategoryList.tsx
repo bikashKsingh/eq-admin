@@ -65,13 +65,16 @@ export function CategoryList() {
     [pagination.page, pagination.limit, searchQuery, needReload, status]
   );
 
-  const columns: Column<{
+  type Record = {
     name: any;
     image: string;
+    displayOrder: string;
     createdAt: any;
     status: any;
     id: any;
-  }>[] = React.useMemo(
+  };
+
+  const columns: Column<Record>[] = React.useMemo(
     () => [
       {
         id: "selection",
@@ -108,6 +111,11 @@ export function CategoryList() {
       {
         Header: "NAME",
         accessor: "name",
+      },
+
+      {
+        Header: "DISPLAY ORDER",
+        accessor: "displayOrder",
       },
 
       {
@@ -175,6 +183,7 @@ export function CategoryList() {
       return {
         name: data.name,
         image: data.image,
+        displayOrder: data.displayOrder,
         createdAt: data.createdAt,
         status: data.status,
         id: data._id,
@@ -210,13 +219,7 @@ export function CategoryList() {
       //     ...columns,
       //   ]);
       // }
-    ) as TableInstanceWithRowSelect<{
-      name: any;
-      image: any;
-      createdAt: any;
-      status: any;
-      id: any;
-    }>;
+    ) as TableInstanceWithRowSelect<Record>;
 
   // handleDeleteData
   async function handleDeleteData(recordId: string | string[]) {

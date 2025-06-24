@@ -29,9 +29,16 @@ export function Router() {
         element={<Pages.TrainerCreateNewPassword />}
       />
 
-      {/* Main Layout or other routes */}
+      {/* Main/Admin Routes */}
       <Route path="/" element={<MainLayout />}>
         <Route index element={<Pages.Home />} />
+
+        {/* Calender */}
+        <Route path="/calendars/add" element={<Pages.AddCalendar />} />
+        <Route path="/calendars" element={<Pages.CalendarList />} />
+
+        {/* Homepage */}
+        <Route path="/homepages" element={<Pages.HomepageContent />} />
         {/* KYC Documents */}
         <Route path="/kycDocuments/add" element={<Pages.AddKycDocument />} />
         <Route
@@ -190,6 +197,38 @@ export function Router() {
           element={<Pages.ProgramDetails />}
         />
 
+        {/* Onboarding Steps */}
+        <Route
+          path="/onboardingSteps/add"
+          element={<Pages.AddOnboardingSteps />}
+        />
+        <Route
+          path="/onboardingSteps/edit/:id"
+          element={<Pages.EditOnboardingSteps />}
+        />
+        <Route
+          path="/onboardingSteps"
+          element={<Pages.OnboardingStepsList />}
+        />
+        <Route
+          path="/onboardingSteps/details/:id"
+          element={<Pages.OnboardingStepsDetails />}
+        />
+
+        {/* Booking Time Slot */}
+        <Route
+          path="/bookingTimeSlots/add"
+          element={<Pages.AddBookingTimeSlot />}
+        />
+        <Route
+          path="/bookingTimeSlots/edit/:id"
+          element={<Pages.EditBookingTimeSlot />}
+        />
+        <Route
+          path="/bookingTimeSlots"
+          element={<Pages.BookingTimeSlotList />}
+        />
+
         {/* Bookings */}
         <Route path="/bookings/add" element={<Pages.AddBooking />} />
         <Route path="/bookings/edit/:id" element={<Pages.EditBooking />} />
@@ -197,6 +236,19 @@ export function Router() {
         <Route
           path="/bookings/details/:id"
           element={<Pages.BookingDetails />}
+        />
+        <Route
+          path="/bookings/onboardingDetails/:id"
+          element={<Pages.OnboardingDetails />}
+        />
+        <Route
+          path="/bookings/onboardingRegistrationDetails/:bookingId/:userId"
+          element={<Pages.OnboardingRegistrationDetails />}
+        />
+
+        <Route
+          path="/bookings/nutritionConsultationDetails/:bookingId/:userId"
+          element={<Pages.OnboardingRegistrationDetails />}
         />
 
         {/* Program Plans */}
@@ -244,6 +296,13 @@ export function Router() {
         <Route path="/budgets/add" element={<Pages.AddBudget />} />
         <Route path="/budgets/edit/:id" element={<Pages.EditBudget />} />
         <Route path="/budgets" element={<Pages.BudgetList />} />
+
+        {/* Build Plan Leads */}
+        <Route path="/buildPlanLeads" element={<Pages.BuildPlanLeadList />} />
+        <Route
+          path="/buildPlanLeads/details/:id"
+          element={<Pages.BuildPlanLeadDetails />}
+        />
       </Route>
 
       {/* Trainer Routes */}

@@ -7,7 +7,7 @@ import {
 } from "../../components";
 import { FormikHelpers, useFormik } from "formik";
 import {
-  addProgramSchema,
+  programSchema,
   ProgramValues,
   programInitialValues,
 } from "../../validationSchemas/programSchema";
@@ -100,7 +100,7 @@ export function AddBooking() {
       setLoading(false);
     },
     initialValues: programInitialValues,
-    validationSchema: addProgramSchema,
+    validationSchema: programSchema,
   });
 
   type Certificate = { question: string; answer: string; error: string };

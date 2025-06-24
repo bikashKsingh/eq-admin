@@ -10,6 +10,7 @@ import { get } from "../utills";
 import { toast } from "react-toastify";
 import { Spinner } from "../components/ui/Spinner";
 import { useAuth } from "../customHooks/useAuth";
+import { InlineWidget, useCalendlyEventListener } from "react-calendly";
 
 export function Home() {
   const chartContainerStyle: any = {
@@ -39,6 +40,15 @@ export function Home() {
     }
     getData();
   }, []);
+
+  useCalendlyEventListener({
+    onProfilePageViewed: (e) =>
+      console.log("onProfilePageViewed", e.data.payload),
+    onDateAndTimeSelected: (e) => console.log("onDateAndTimeSelected", e),
+    onEventTypeViewed: (e) => console.log("onEventTypeViewed", e.data.payload),
+    onEventScheduled: (e) => console.log(e),
+    // onPageHeightResize: (e) => console.log(e.data.payload.height),
+  });
 
   return (
     <div className="content-wrapper">
@@ -475,6 +485,36 @@ export function Home() {
                             </td>
                           </tr> */}
                         </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="row">
+        <div className="col-md-12 grid-margin stretch-card">
+          <div className="card position-relative">
+            <div className="card-body">
+              <p className="card-title">Calendly Integration</p>
+              <div className="row">
+                <div className="col-md-12 col-xl-9">
+                  <div className="row">
+                    <div className="col-md-12 col-xl-12">
+                      <div className="inline-widget">
+                        <InlineWidget
+                          url="https://calendly.com/bikash-estaglobal/welcome"
+                          prefill={{
+                            email: "test@test.com",
+                            firstName: "Jon",
+                            lastName: "Snow",
+                            name: "Jon Snow",
+                            smsReminderNumber: "+1234567890",
+                          }}
+                        />
                       </div>
                     </div>
                   </div>

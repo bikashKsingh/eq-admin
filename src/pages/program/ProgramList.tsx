@@ -23,7 +23,7 @@ import { toast } from "react-toastify";
 export function ProgramList() {
   const [loading, setLoading] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [status, setStatus] = useState<boolean | string>("");
+  const [status, setStatus] = useState<boolean | string>("ALL");
   const [needReload, setNeedReload] = useState<boolean>(false);
   const [records, setRecords] = useState<any[]>([]);
   const [categories, setCategories] = useState([]);
@@ -80,6 +80,7 @@ export function ProgramList() {
 
   type Record = {
     name: string;
+    displayOrder: string;
     defaultImage: string;
     createdAt: string;
     status: boolean;
@@ -123,6 +124,10 @@ export function ProgramList() {
       {
         Header: "NAME",
         accessor: "name",
+      },
+      {
+        Header: "DISPLAY ORDER",
+        accessor: "displayOrder",
       },
 
       {
@@ -202,6 +207,7 @@ export function ProgramList() {
     return records.map((data) => {
       return {
         name: data.name,
+        displayOrder: data.displayOrder,
         defaultImage: data.defaultImage,
         createdAt: data.createdAt,
         status: data.status,
@@ -324,6 +330,7 @@ export function ProgramList() {
                         setSelectedCategory(value);
                       }}
                       handleBlur={() => {}}
+                      inputPadding={"0px"}
                     />
                   </div>
 
@@ -373,21 +380,21 @@ export function ProgramList() {
                         <input
                           type="radio"
                           id="active"
-                          value={"SUBSCRIBED"}
+                          value={"true"}
                           name="status"
                           onChange={handleSetStatus}
                         />
-                        <label htmlFor="active">Subscribed</label>
+                        <label htmlFor="active">Active</label>
                       </li>
                       <li className="d-flex px-3 gap-2">
                         <input
                           type="radio"
                           id="disabled"
-                          value={"UNSUBSCRIBED"}
+                          value={"false"}
                           name="status"
                           onChange={handleSetStatus}
                         />
-                        <label htmlFor="disabled">Unsubscribed</label>
+                        <label htmlFor="disabled">Disabled</label>
                       </li>
                     </ul>
                   </div>

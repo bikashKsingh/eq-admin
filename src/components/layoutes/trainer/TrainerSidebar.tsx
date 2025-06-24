@@ -24,7 +24,7 @@ export function TrainerSidebar() {
     <nav className="sidebar sidebar-offcanvas" id="sidebar">
       <ul className="nav">
         <li className="nav-item">
-          <Link className="nav-link active" to="/trainer">
+          <Link className="nav-link active" to="/trainer/">
             <i className="ti-shield menu-icon"></i>
             {/* <TfiDashboard className="menu-icon" /> */}
             <span className="menu-title">DASHBOARD</span>

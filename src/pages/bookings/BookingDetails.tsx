@@ -5,6 +5,7 @@ import { get, post, put, remove } from "../../utills";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import moment from "moment";
+import { Spinner } from "../../components/ui/Spinner";
 
 export function BookingDetails() {
   const navigate = useNavigate();
@@ -15,14 +16,19 @@ export function BookingDetails() {
   const [selectedTrainer, setSelectedTrainer] = useState<any>();
   const [trainerAssigning, setTrainerAssigning] = useState<boolean>(true);
   const [needReload, setNeedReload] = useState<boolean>(false);
-
+  const [onboardingRegDetails, setOnboardingRegDetails] = useState<any>(null);
+  const [onboardingSteps, setOnboardingSteps] = useState<any[] | null>(null);
+  const [onboardingRegLoading, setOnboardingRegLoading] =
+    useState<boolean>(false);
   // get program plan details
+
   useEffect(
     function () {
       async function getData(id: string) {
         setLoading(true);
         const apiResponse = await get(`/bookings/${id}`, true);
         if (apiResponse?.status == 200) {
+          setOnboardingSteps(apiResponse?.body?.onboardingSteps);
           setUserBooking(apiResponse?.body);
         }
         setLoading(false);
@@ -35,7 +41,7 @@ export function BookingDetails() {
   // get trainers
   useEffect(function () {
     async function getData() {
-      const apiResponse = await get(`/trainers`, true);
+      const apiResponse = await get(`/trainers?limit=0&status=true`, true);
       if (apiResponse?.status == 200) {
         const modifiedValue = apiResponse?.body?.map((value: any) => {
           return {
@@ -69,6 +75,27 @@ export function BookingDetails() {
     }
     setTrainerAssigning(false);
   }
+
+  // get onboarding registration details
+  useEffect(
+    function () {
+      async function getData(id: string) {
+        setOnboardingRegLoading(true);
+        const apiResponse = await get(
+          `/onboardingRegistrations?booking=${id}`,
+          true
+        );
+        if (apiResponse?.status == 200) {
+          if (apiResponse?.body?.length) {
+            setOnboardingRegDetails(apiResponse?.body[0]);
+          }
+        }
+        setOnboardingRegLoading(false);
+      }
+      if (id) getData(id);
+    },
+    [id]
+  );
 
   return (
     <div className="content-wrapper">
@@ -198,6 +225,51 @@ export function BookingDetails() {
                       >
                         <i className="ti-pencil-alt"></i> Update Details
                       </Link>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-md-12 mt-3 d-flex gap-2">
+                      <Link
+                        className={`btn ${
+                          userBooking?.isOnboardingCompleted
+                            ? "btn-info text-light"
+                            : "btn-warning"
+                        } p-2`}
+                        to={`/bookings/onboardingDetails/${id}`}
+                      >
+                        <i
+                          className={
+                            userBooking?.isOnboardingCompleted
+                              ? "fa fa-check-circle"
+                              : "fas fa-exclamation-circle"
+                          }
+                        ></i>{" "}
+                        Onboarding Steps
+                      </Link>
+
+                      {onboardingRegLoading ? (
+                        <Link className={`btn`} to={`#`}>
+                          <Spinner />
+                        </Link>
+                      ) : (
+                        <Link
+                          className={`btn ${
+                            onboardingRegDetails
+                              ? "btn-info text-light"
+                              : "btn-warning"
+                          } p-2`}
+                          to={`/bookings/onboardingRegistrationDetails/${id}/${userBooking?.user?._id}`}
+                        >
+                          <i
+                            className={`${
+                              onboardingRegDetails
+                                ? "fa fa-check-circle"
+                                : "fas fa-exclamation-circle"
+                            }`}
+                          ></i>{" "}
+                          Onboarding Registration
+                        </Link>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -360,7 +432,7 @@ export function BookingDetails() {
                             <tbody>
                               <tr>
                                 <td scope="row">Name</td>
-                                <td>{userBooking?.name}</td>
+                                <td>{`${userBooking?.firstName} ${userBooking?.lastName}`}</td>
                               </tr>
                               <tr>
                                 <td scope="row">Mobile</td>
@@ -465,6 +537,245 @@ export function BookingDetails() {
             </div>
           </div>
 
+          {/* Booking Slot Details */}
+          <div className="col-md-12">
+            <div className="card rounded-2 mt-4">
+              <div className="card-body">
+                <div className="row">
+                  <div className="col-md-12 d-flex justify-content-between align-items-center">
+                    <h5
+                      className="mb-2 cursor-hand"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#slotSection"
+                      aria-expanded="false"
+                      aria-controls="slotSection"
+                    >
+                      Booked Slot Details
+                    </h5>
+                    <button
+                      className="btn btn-light"
+                      type="button"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#slotSection"
+                      aria-expanded="false"
+                      aria-controls="slotSection"
+                    >
+                      <i className="fa fa-angle-down text-primary" />
+                    </button>
+                  </div>
+
+                  <div className="collapse show" id="slotSection">
+                    <div className="p-2 row">
+                      <div className="col-md-12">
+                        <p>
+                          {userBooking?.bookingTimeSlot ? (
+                            <div className="row">
+                              <div className="col-md-12">
+                                <span className="badge bg-success">
+                                  {userBooking?.bookingTimeSlot?.title}
+                                </span>
+                              </div>
+
+                              <div className="col-md-6">
+                                <ul className="mt-2 list-group">
+                                  {userBooking?.bookingTimeSlot?.monday ? (
+                                    <li className="list-group-item d-flex justify-content-between align-items-center">
+                                      MONDAY
+                                      <span className="badge bg-primary rounded-pill">
+                                        {moment(
+                                          userBooking?.bookingTimeSlot
+                                            ?.mondayTime,
+                                          "h:mm: a"
+                                        ).format("h:mm A")}
+                                      </span>
+                                    </li>
+                                  ) : null}
+
+                                  {userBooking?.bookingTimeSlot?.tuesday ? (
+                                    <li className="list-group-item d-flex justify-content-between align-items-center">
+                                      TUESDAY
+                                      <span className="badge bg-primary rounded-pill">
+                                        {moment(
+                                          userBooking?.bookingTimeSlot
+                                            ?.tuesdayTime,
+                                          "h:mm: a"
+                                        ).format("h:mm A")}
+                                      </span>
+                                    </li>
+                                  ) : null}
+
+                                  {userBooking?.bookingTimeSlot?.wednesday ? (
+                                    <li className="list-group-item d-flex justify-content-between align-items-center">
+                                      WEDNESDAY
+                                      <span className="badge bg-primary rounded-pill">
+                                        {moment(
+                                          userBooking?.bookingTimeSlot
+                                            ?.wednesdayTime,
+                                          "h:mm: a"
+                                        ).format("h:mm A")}
+                                      </span>
+                                    </li>
+                                  ) : null}
+
+                                  {userBooking?.bookingTimeSlot?.thursday ? (
+                                    <li className="list-group-item d-flex justify-content-between align-items-center">
+                                      THURSDAY
+                                      <span className="badge bg-primary rounded-pill">
+                                        {moment(
+                                          userBooking?.bookingTimeSlot
+                                            ?.thursdayTime,
+                                          "h:mm: a"
+                                        ).format("h:mm A")}
+                                      </span>
+                                    </li>
+                                  ) : null}
+
+                                  {userBooking?.bookingTimeSlot?.friday ? (
+                                    <li className="list-group-item d-flex justify-content-between align-items-center">
+                                      FRIDAY
+                                      <span className="badge bg-primary rounded-pill">
+                                        {moment(
+                                          userBooking?.bookingTimeSlot
+                                            ?.fridayTime,
+                                          "h:mm: a"
+                                        ).format("h:mm A")}
+                                      </span>
+                                    </li>
+                                  ) : null}
+
+                                  {userBooking?.bookingTimeSlot?.saturday ? (
+                                    <li className="list-group-item d-flex justify-content-between align-items-center">
+                                      SATURDAY
+                                      <span className="badge bg-primary rounded-pill">
+                                        {moment(
+                                          userBooking?.bookingTimeSlot
+                                            ?.saturdayTime,
+                                          "h:mm: a"
+                                        ).format("h:mm A")}
+                                      </span>
+                                    </li>
+                                  ) : null}
+
+                                  {userBooking?.bookingTimeSlot?.sunday ? (
+                                    <li className="list-group-item d-flex justify-content-between align-items-center">
+                                      SUNDAY
+                                      <span className="badge bg-primary rounded-pill">
+                                        {moment(
+                                          userBooking?.bookingTimeSlot
+                                            ?.sundayTime,
+                                          "h:mm: a"
+                                        ).format("h:mm A")}
+                                      </span>
+                                    </li>
+                                  ) : null}
+                                </ul>
+                              </div>
+                            </div>
+                          ) : (
+                            "N/A"
+                          )}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Calendly Booking */}
+          <div className="col-md-12">
+            <div className="card rounded-2 mt-4">
+              <div className="card-body">
+                <div className="row">
+                  <div className="col-md-12 d-flex justify-content-between align-items-center">
+                    <h5
+                      className="mb-2 cursor-hand"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#eventBookingDetails"
+                      aria-expanded="false"
+                      aria-controls="eventBookingDetails"
+                    >
+                      Calendly Booking
+                    </h5>
+                    <button
+                      className="btn btn-light"
+                      type="button"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#eventBookingDetails"
+                      aria-expanded="false"
+                      aria-controls="eventBookingDetails"
+                    >
+                      <i className="fa fa-angle-down text-primary" />
+                    </button>
+                  </div>
+
+                  <div className="collapse show" id="eventBookingDetails">
+                    <div className="p-2 row">
+                      <div className="col-md-12">
+                        <p>
+                          {onboardingSteps?.map((item) => {
+                            return item.eventName ? (
+                              <div className="row">
+                                <div
+                                  className="col-md-6"
+                                  style={{
+                                    background: "#fee9e4",
+                                    padding: "10px",
+                                    marginBottom: "5px",
+                                    borderRadius: "5px",
+                                  }}
+                                >
+                                  <h6 className="ms-2 mb-3">
+                                    <span
+                                      className="badge bg-success"
+                                      style={{ fontSize: "13px" }}
+                                    >
+                                      {item.eventName}
+                                    </span>
+                                  </h6>
+
+                                  <p className="ms-2 d-flex gap-2">
+                                    <span>Start Time : </span>
+                                    <span className="badge bg-light text-info">
+                                      <i className="ti-calendar"></i>{" "}
+                                      {moment(item.startTime).format(
+                                        "DD-MMM-YYYY"
+                                      )}
+                                    </span>
+
+                                    <span className="badge bg-light text-info">
+                                      <i className="ti-timer"></i>{" "}
+                                      {moment(item.startTime).format("HH:mm A")}
+                                    </span>
+                                  </p>
+                                  <p className="ms-2 d-flex gap-2">
+                                    <span>End Time : </span>
+
+                                    <span className="badge bg-light text-info">
+                                      <i className="ti-calendar"></i>{" "}
+                                      {moment(item.endTime).format(
+                                        "DD-MMM-YYYY"
+                                      )}
+                                    </span>
+                                    <span className="badge bg-light text-info">
+                                      <i className="ti-timer"></i>{" "}
+                                      {moment(item.endTime).format("HH:mm A")}
+                                    </span>
+                                  </p>
+                                </div>
+                              </div>
+                            ) : null;
+                          })}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Invoice */}
           <div className="col-md-12">
             <div className="card rounded-2 mt-4">
@@ -505,9 +816,9 @@ export function BookingDetails() {
                           {/* Invoice  To */}
                           <div className="">
                             <h6 className="text-success">Invoice to</h6>
-                            <h4 className="p-0 m-0">{userBooking.name}</h4>
-                            <p className="p-0 m-0">{userBooking.mobile}</p>
-                            <p className="p-0 m-0">{userBooking.email}</p>
+                            <h4 className="p-0 m-0">{userBooking?.name}</h4>
+                            <p className="p-0 m-0">{userBooking?.mobile}</p>
+                            <p className="p-0 m-0">{userBooking?.email}</p>
                           </div>
                           {/* Invoice  From */}
                           <div className="">

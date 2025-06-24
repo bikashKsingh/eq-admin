@@ -69,6 +69,7 @@ export function PlanList() {
     name: any;
     allowSubscription: any;
     subscriptionDiscountPercentage: any;
+    // displayOrder: string;
     createdAt: any;
     status: any;
     id: any;
@@ -112,6 +113,11 @@ export function PlanList() {
         Header: "DISCOUNT PERCENTAGE",
         accessor: "subscriptionDiscountPercentage",
       },
+
+      // {
+      //   Header: "DISPLAY ORDER",
+      //   accessor: "displayOrder",
+      // },
 
       {
         Header: "CREATED AT",
@@ -180,6 +186,7 @@ export function PlanList() {
         allowSubscription: data.allowSubscription,
         subscriptionDiscountPercentage: data.subscriptionDiscountPercentage,
         createdAt: data.createdAt,
+        // displayOrder: data.displayOrder,
         status: data.status,
         id: data._id,
       };

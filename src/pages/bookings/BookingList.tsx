@@ -19,6 +19,11 @@ import moment from "moment";
 import { Link } from "react-router-dom";
 import { deleteConfirmation, get, BOOKING_STATUS, remove } from "../../utills";
 import { toast } from "react-toastify";
+import { DateRangePicker } from "react-date-range";
+import { enUS } from "date-fns/locale";
+
+// import DatePicker from "react-datepicker";
+// import "react-datepicker/dist/react-datepicker.css";
 
 export function BookingList() {
   const [loading, setLoading] = useState<boolean>(false);
@@ -26,6 +31,17 @@ export function BookingList() {
   const [status, setStatus] = useState<boolean | string>("");
   const [needReload, setNeedReload] = useState<boolean>(false);
   const [records, setRecords] = useState<any[]>([]);
+
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+
+  const [selectionRange, setSelectionRange] = useState({
+    startDate: new Date(),
+    endDate: new Date(),
+    key: "selection",
+  });
+
+  const [isCalendarVisible, setCalendarVisible] = useState(false);
 
   const [bookingStatus, setBookingStatus] = useState([
     {
@@ -107,6 +123,7 @@ export function BookingList() {
     plan: string;
     user: string;
     bookingDate: string;
+    activationDate: string;
     bookingStatus: boolean;
     id: string;
   };
@@ -146,6 +163,10 @@ export function BookingList() {
       //   },
       // },
       {
+        Header: "USER NAME",
+        accessor: "user",
+      },
+      {
         Header: "PROGRAM",
         accessor: "program",
       },
@@ -155,19 +176,24 @@ export function BookingList() {
         accessor: "plan",
       },
       {
-        Header: "USER",
-        accessor: "user",
-      },
-
-      {
         Header: "BOOKING DATE",
         accessor: "bookingDate",
         Cell: ({ value }: any) => {
           return moment(new Date(value)).format("DD-MM-YYYY");
         },
       },
+
       {
-        Header: "BOOLING STATUS",
+        Header: "ACTIVATION DATE",
+        accessor: "activationDate",
+        Cell: ({ value }: any) => {
+          return value
+            ? moment(new Date(value)).format("DD-MM-YYYY")
+            : "Not Available";
+        },
+      },
+      {
+        Header: "STATUS",
         accessor: "bookingStatus",
         Cell: ({ value }: any) => {
           const bookingStatus: BOOKING_STATUS = value;
@@ -243,6 +269,7 @@ export function BookingList() {
         plan: data?.plan?.name,
         user: `${data?.user?.firstName} ${data?.user?.lastName}`,
         bookingDate: data.createdAt,
+        activationDate: data.activationDate,
         bookingStatus: data.bookingStatus,
         id: data._id,
       };
@@ -293,6 +320,10 @@ export function BookingList() {
     setStatus(evt.target.value);
   }
 
+  function handleSelectDateRange(ranges: any) {
+    setSelectionRange(ranges.selection);
+  }
+
   return (
     <div className="content-wrapper">
       <div className="row">
@@ -321,14 +352,100 @@ export function BookingList() {
             <div className="card-body shadow-none">
               <div className="row mb-2 gy-2">
                 <div className="col-md-6">
-                  <input
+                  {/* <input
                     placeholder="Serach..."
                     className="form-control py-2"
                     type="serach"
                     onChange={(evt: React.ChangeEvent<HTMLInputElement>) =>
                       setSearchQuery(evt.target.value)
                     }
-                  />
+                  /> */}
+
+                  {/* Display selected date range */}
+                  <div
+                    style={{
+                      marginTop: "10px",
+                      fontSize: "16px",
+                    }}
+                    onClick={() => {
+                      setCalendarVisible(!isCalendarVisible);
+                    }}
+                  >
+                    <p
+                      className="px-3 py-1"
+                      style={{
+                        display: "inline-block",
+                        boxShadow: "0px 1px 1px #5a5a5a",
+                        borderRadius: "5px",
+                      }}
+                    >
+                      <i className="ti-calendar"></i>{" "}
+                      {`${selectionRange.startDate.toDateString()} - ${selectionRange.endDate.toDateString()}`}
+                    </p>
+                  </div>
+
+                  {isCalendarVisible && (
+                    <div
+                      style={{
+                        marginTop: "10px",
+                        position: "absolute",
+                        left: "20px",
+                        background: "white",
+                        padding: "10px",
+                        boxShadow: "0px 4px 10px rgba(0,0,0,0.2)",
+                        borderRadius: "8px",
+                        zIndex: 10,
+                      }}
+                    >
+                      <DateRangePicker
+                        ranges={[selectionRange]}
+                        onChange={(ranges) => {
+                          handleSelectDateRange(ranges);
+                        }}
+                        locale={enUS}
+                        minDate={new Date("2024-01-01")}
+                        maxDate={new Date("2028-12-31")}
+                        direction="horizontal"
+                        editableDateInputs={true}
+                        scroll={{ enabled: false }}
+                        dateDisplayFormat="dd/MM/yyyy"
+                        rangeColors={["#4caf50"]} // Customize the highlight color
+                      />
+
+                      <div className="d-flex gap-2 justify-content-end">
+                        <div className="">
+                          <button
+                            className="btn btn-danger p-2"
+                            onClick={() => {
+                              setCalendarVisible(false); // Close calendar
+                              console.log(
+                                "Selected Date Range:",
+                                selectionRange
+                              );
+                            }}
+                          >
+                            Cancel
+                          </button>
+                        </div>
+
+                        {/* Apply Button */}
+                        {/* <div className="">
+                          <button
+                            className="btn btn-success p-2"
+                            onClick={() => {
+                              setCalendarVisible(false);
+                              console.log(
+                                "Selected Date Range:",
+                                selectionRange
+                              );
+                            }}
+                          >
+                            Apply
+                          </button>
+                        </div> */}
+                      </div>
+                    </div>
+                  )}
                 </div>
                 <div className="col-md-6 d-flex gap-2 justify-content-md-end">
                   <div className="p-0">
@@ -345,6 +462,7 @@ export function BookingList() {
                         setSelectedBookingStatus(value);
                       }}
                       handleBlur={() => {}}
+                      inputPadding={"0px 0px"}
                     />
                   </div>
 

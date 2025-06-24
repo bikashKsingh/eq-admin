@@ -24,7 +24,7 @@ export function AddProgramPlan() {
   const { id } = useParams();
   const [programDetails, setProgramDetails] = useState<any>(null);
   const [plans, setPlans] = useState<any[]>([]);
-  const [planTypes, setPlanTypes] = useState<any[]>([]);
+  // const [planTypes, setPlanTypes] = useState<any[]>([]);
 
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -48,7 +48,7 @@ export function AddProgramPlan() {
         ...values,
         program: id,
         plan: values?.plan?.value,
-        planType: values.planType?.value,
+        // planType: values.planType?.value,
       };
 
       const apiResponse = await post("/programPlans", newValue, true);
@@ -103,22 +103,22 @@ export function AddProgramPlan() {
   }, []);
 
   // get plan type
-  useEffect(function () {
-    async function getData() {
-      const apiResponse = await get("/planTypes", true);
-      if (apiResponse?.status == 200) {
-        const modifiedValue = apiResponse?.body?.map((value: any) => {
-          return {
-            label: value.title,
-            value: value._id,
-          };
-        });
-        setPlanTypes(modifiedValue);
-      }
-    }
+  // useEffect(function () {
+  //   async function getData() {
+  //     const apiResponse = await get("/planTypes", true);
+  //     if (apiResponse?.status == 200) {
+  //       const modifiedValue = apiResponse?.body?.map((value: any) => {
+  //         return {
+  //           label: value.title,
+  //           value: value._id,
+  //         };
+  //       });
+  //       setPlanTypes(modifiedValue);
+  //     }
+  //   }
 
-    getData();
-  }, []);
+  //   getData();
+  // }, []);
 
   return (
     <div className="content-wrapper">
@@ -183,7 +183,89 @@ export function AddProgramPlan() {
                     />
                   </div>
 
-                  <div className="form-group col-md-6">
+                  <div className="form-group col-md-3">
+                    <label htmlFor="">
+                      Default Plan <span className="text-danger"> *</span>
+                    </label>
+                    <div className="d-flex gap-3">
+                      <div className="d-flex align-items-center gap-2">
+                        <input
+                          type="radio"
+                          name="isDefault"
+                          id="defaultTrue"
+                          value={"true"}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          checked={values.isDefault == "true"}
+                        />
+                        <label htmlFor="defaultTrue" className="mt-2">
+                          Yes
+                        </label>
+                      </div>
+                      <div className="d-flex align-items-center gap-1">
+                        <input
+                          type="radio"
+                          name="isDefault"
+                          id="defaultFalse"
+                          value={"false"}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          checked={values.isDefault == "false"}
+                        />
+                        <label htmlFor="defaultFalse" className="mt-2">
+                          No
+                        </label>
+                      </div>
+                    </div>
+                    {errors.isDefault && touched.isDefault ? (
+                      <p className="custom-form-error text-danger">
+                        {errors.isDefault}
+                      </p>
+                    ) : null}
+                  </div>
+
+                  <div className="form-group col-md-3">
+                    <label htmlFor="">
+                      Status <span className="text-danger"> *</span>
+                    </label>
+                    <div className="d-flex gap-3">
+                      <div className="d-flex align-items-center gap-2">
+                        <input
+                          type="radio"
+                          name="status"
+                          id="statusTrue"
+                          value={"true"}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          checked={values.status == "true"}
+                        />
+                        <label htmlFor="statusTrue" className="mt-2">
+                          Active
+                        </label>
+                      </div>
+                      <div className="d-flex align-items-center gap-1">
+                        <input
+                          type="radio"
+                          name="status"
+                          id="statusFalse"
+                          value={"false"}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          checked={values.status == "false"}
+                        />
+                        <label htmlFor="statusFalse" className="mt-2">
+                          Disabled
+                        </label>
+                      </div>
+                    </div>
+                    {errors.status && touched.status ? (
+                      <p className="custom-form-error text-danger">
+                        {errors.status}
+                      </p>
+                    ) : null}
+                  </div>
+
+                  {/* <div className="form-group col-md-6">
                     <CustomSelect
                       label="Select Plan Type"
                       placeholder="Select plan type"
@@ -201,7 +283,7 @@ export function AddProgramPlan() {
                         setFieldTouched("planType", true);
                       }}
                     />
-                  </div>
+                  </div> */}
 
                   <div className="form-group col-md-12">
                     <TextareaBox
@@ -336,47 +418,6 @@ export function AddProgramPlan() {
                     />
                   </div>
 
-                  <div className="form-group col-md-6">
-                    <label htmlFor="">
-                      Default Plan <span className="text-danger"> *</span>
-                    </label>
-                    <div className="d-flex gap-3">
-                      <div className="d-flex align-items-center gap-2">
-                        <input
-                          type="radio"
-                          name="isDefault"
-                          id="true"
-                          value={"true"}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          checked={values.isDefault == "true"}
-                        />
-                        <label htmlFor="true" className="mt-2">
-                          Active
-                        </label>
-                      </div>
-                      <div className="d-flex align-items-center gap-1">
-                        <input
-                          type="radio"
-                          name="isDefault"
-                          id="false"
-                          value={"false"}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          checked={values.isDefault == "false"}
-                        />
-                        <label htmlFor="false" className="mt-2">
-                          Disabled
-                        </label>
-                      </div>
-                    </div>
-                    {errors.isDefault && touched.isDefault ? (
-                      <p className="custom-form-error text-danger">
-                        {errors.isDefault}
-                      </p>
-                    ) : null}
-                  </div>
-
                   {/* <div className="form-group col-md-6">
                     <label htmlFor="">
                       Cancellable <span className="text-danger"> *</span>
@@ -432,47 +473,6 @@ export function AddProgramPlan() {
                       error={errors.cancellationPeriod}
                     />
                   </div> */}
-
-                  <div className="form-group col-md-6">
-                    <label htmlFor="">
-                      Status <span className="text-danger"> *</span>
-                    </label>
-                    <div className="d-flex gap-3">
-                      <div className="d-flex align-items-center gap-2">
-                        <input
-                          type="radio"
-                          name="status"
-                          id="true"
-                          value={"true"}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          checked={values.status == "true"}
-                        />
-                        <label htmlFor="true" className="mt-2">
-                          Active
-                        </label>
-                      </div>
-                      <div className="d-flex align-items-center gap-1">
-                        <input
-                          type="radio"
-                          name="status"
-                          id="false"
-                          value={"false"}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          checked={values.status == "false"}
-                        />
-                        <label htmlFor="false" className="mt-2">
-                          Disabled
-                        </label>
-                      </div>
-                    </div>
-                    {errors.status && touched.status ? (
-                      <p className="custom-form-error text-danger">
-                        {errors.status}
-                      </p>
-                    ) : null}
-                  </div>
                 </div>
               </div>
             </div>

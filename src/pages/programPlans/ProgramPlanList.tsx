@@ -1,4 +1,9 @@
-import { DataTable, GoBackButton, Pagination } from "../../components";
+import {
+  CustomSelect,
+  DataTable,
+  GoBackButton,
+  Pagination,
+} from "../../components";
 import {
   Column,
   HeaderProps,
@@ -24,6 +29,13 @@ export function ProgramPlanList() {
   const [status, setStatus] = useState<boolean | string>("");
   const [needReload, setNeedReload] = useState<boolean>(false);
   const [records, setRecords] = useState<any[]>([]);
+  const [programs, setPrograms] = useState<any[]>([
+    { label: "All Program", value: "ALL" },
+  ]);
+  const [selectedProgram, setSelectedProgram] = useState<{
+    label: string;
+    value: string;
+  } | null>(null);
   const [pagination, setPagination] = useState({
     page: 1,
     limit: 10,
@@ -44,6 +56,7 @@ export function ProgramPlanList() {
         let url = `/programPlans?page=${pagination.page}&limit=${pagination.limit}`;
         if (searchQuery) url += `&searchQuery=${searchQuery}`;
         if (status) url += `&status=${status}`;
+        if (selectedProgram) url += `&program=${selectedProgram.value}`;
 
         const apiResponse = await get(url, true);
         if (apiResponse?.status == 200) {
@@ -63,7 +76,14 @@ export function ProgramPlanList() {
 
       getData();
     },
-    [pagination.page, pagination.limit, searchQuery, needReload, status]
+    [
+      pagination.page,
+      pagination.limit,
+      searchQuery,
+      needReload,
+      status,
+      selectedProgram,
+    ]
   );
 
   type Record = {
@@ -209,6 +229,26 @@ export function ProgramPlanList() {
     });
   }, [records]);
 
+  // get category
+  useEffect(function () {
+    async function getData() {
+      const apiResponse = await get("/programs", true);
+      if (apiResponse?.status == 200) {
+        const modifiedValue = apiResponse?.body?.map((value: any) => {
+          return {
+            label: value.name,
+            value: value._id,
+          };
+        });
+        setPrograms((old: any) => {
+          return [...old, ...modifiedValue];
+        });
+      }
+    }
+
+    getData();
+  }, []);
+
   const { getTableProps, headerGroups, rows, prepareRow, selectedFlatRows } =
     useTable(
       { columns, data },
@@ -301,7 +341,7 @@ export function ProgramPlanList() {
           <div className="card rounded-2">
             <div className="card-body shadow-none">
               <div className="row mb-2 gy-2">
-                <div className="col-8">
+                <div className="col-7">
                   <input
                     placeholder="Serach..."
                     className="form-control py-2"
@@ -311,10 +351,28 @@ export function ProgramPlanList() {
                     }
                   />
                 </div>
-                <div className="col-4 d-flex gap-2 justify-content-md-end">
+                <div className="col-5 d-flex gap-2 justify-content-md-end">
                   {/* <button className="btn p-2 bg-light border">
                     <i className="ti-search"></i>
                   </button> */}
+                  <div className="p-0">
+                    <CustomSelect
+                      label=""
+                      placeholder="Select Program"
+                      name="program"
+                      required={false}
+                      options={programs}
+                      value={selectedProgram}
+                      error={""}
+                      touched={false}
+                      handleChange={(value) => {
+                        setSelectedProgram(value);
+                      }}
+                      handleBlur={() => {}}
+                      inputPadding={"0px"}
+                    />
+                  </div>
+
                   {selectedFlatRows.length ? (
                     <button
                       className="btn p-2 bg-light border"

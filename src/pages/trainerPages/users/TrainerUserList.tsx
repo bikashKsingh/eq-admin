@@ -62,7 +62,8 @@ export function TrainersUserList() {
   );
 
   type Record = {
-    name: string;
+    firstName: string;
+    lastName: string;
     mobile: string;
     email: string;
     totalBookings: number;
@@ -96,8 +97,13 @@ export function TrainersUserList() {
       },
 
       {
-        Header: "NAME",
-        accessor: "name",
+        Header: "FISRT NAME",
+        accessor: "firstName",
+      },
+
+      {
+        Header: "LAST NAME",
+        accessor: "lastName",
       },
       {
         Header: "MOBILE",
@@ -188,7 +194,8 @@ export function TrainersUserList() {
   const data = React.useMemo(() => {
     return records.map((data) => {
       return {
-        name: data.name,
+        firstName: data.firstName,
+        lastName: data.lastName,
         mobile: data.mobile,
         email: data.email,
         totalBookings: data.totalBookings ? data.totalBookings : "N/A",

@@ -2,7 +2,7 @@ import * as Yup from "yup";
 
 export const programPlanSchema = Yup.object({
   plan: Yup.object().required().label("Plan"),
-  planType: Yup.object().required().label("Plan Type"),
+  // planType: Yup.object().required().label("Plan Type"),
   salePriceInr: Yup.number().required().label("Sale Price INR"),
   mrpInr: Yup.number().label("MRP INR"),
   planDuration: Yup.number().required().label("Plan Duration"),
@@ -21,7 +21,7 @@ export const programPlanSchema = Yup.object({
 
 export const programPlanInitialValues: ProgramPlanValues = {
   plan: null,
-  planType: null,
+  // planType: null,
   salePriceInr: "",
   mrpInr: "",
   planDuration: "0",
@@ -45,10 +45,10 @@ export interface ProgramPlanValues {
     label: string;
     value: string;
   } | null;
-  planType: {
-    label: string;
-    value: string;
-  } | null;
+  // planType: {
+  //   label: string;
+  //   value: string;
+  // } | null;
   salePriceInr: string;
   mrpInr: string;
   salePriceDollar: string;

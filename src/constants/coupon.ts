@@ -11,6 +11,14 @@ export const COUPON_STATUS = {
   HOLD: "Hold",
 };
 
+export const COUPON_LEVEL = {
+  PLAN: "Plan",
+  PROGRAM: "Program",
+  CATEGORY: "Category",
+  ALL: "All",
+};
+
+export type CouponLevelTypes = "PLAN" | "PROGRAM" | "CATEGORY" | "";
 export type CoponUserTypes = "NEW_USER" | "EXISTING_USER" | "ALL_USER" | "";
 export type CouponDiscountTypes = "AMOUNT" | "PERCENTAGE" | "";
 export type CouponStatusTypes = "PENDING" | "ACTIVE" | "EXPIRED" | "HOLD" | "";
@@ -28,6 +36,12 @@ export const applyForOption: any[] = Object.entries(COUPON_USERS).map(
 );
 
 export const discountTypeOption: any[] = Object.entries(COUPON_DISCOUNT).map(
+  ([key, value]) => {
+    return { value: key, label: value };
+  }
+);
+
+export const couponLevelOption: any[] = Object.entries(COUPON_LEVEL).map(
   ([key, value]) => {
     return { value: key, label: value };
   }

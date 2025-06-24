@@ -97,30 +97,24 @@ export function UserDetails() {
                 <div className="card rounded-2">
                   <div className="card-body">
                     <div className="text-center">
-                      {userDetails.gender == "FEMALE" ? (
-                        <img
-                          className="img"
+                      <div className="d-flex justify-content-center">
+                        <div
+                          className="4px solid green"
                           style={{
                             height: 80,
                             width: 80,
                             borderRadius: 40,
-                            border: "4px solid green",
+                            fontSize: "60px",
+                            backgroundColor: "#006D5A",
+                            color: "#fff",
+                            paddingTop: "2px",
                           }}
-                          src="/images/placeholders/male-user.jpg"
-                        />
-                      ) : (
-                        <img
-                          className="img"
-                          style={{
-                            height: 80,
-                            width: 80,
-                            borderRadius: 40,
-                            border: "4px solid green",
-                          }}
-                          src="/images/placeholders/female-user.jpg"
-                        />
-                      )}
-                      <h6 className="px-0 pt-2">{userDetails?.name}</h6>
+                        >
+                          <span>{userDetails?.firstName[0]}</span>
+                        </div>
+                      </div>
+
+                      <h6 className="px-0 pt-2">{`${userDetails?.firstName} ${userDetails?.lastName}`}</h6>
                       <p>
                         <span className="badge bg-warning rounded">
                           {userDetails?.gender}
@@ -357,7 +351,7 @@ export function UserDetails() {
                                     <Link
                                       className="p-2 bg-light"
                                       to={{
-                                        pathname: `/users/booking/planDetails/${item?._id}`,
+                                        pathname: `/bookings/details/${item?._id}`,
                                       }}
                                     >
                                       <span

@@ -34,7 +34,7 @@ export function ProgramDetails() {
       async function getData(id: string) {
         setLoading(true);
         const apiResponse = await get(
-          `/programPLans?program=${id}&displayOrder=ASC&planTypeWise=true`,
+          `/programPLans?program=${id}&displayOrder=ASC`,
           true
         );
         if (apiResponse?.status == 200) {
@@ -160,176 +160,158 @@ export function ProgramDetails() {
                       <hr className="m-0 mb-3" />
                     </div>
                     <div className="px-3">
-                      {programPlans?.map((item: any, i: number) => {
-                        let bg = "#fff4e6";
-                        if (i == 1) bg = "#e5ffe6";
-                        if (i == 2) bg = "#fee9e4";
-                        if (i == 3) bg = "#e5ffff";
-                        return (
-                          <div className="row gy-2 bg-light rounded py-2 mb-3">
-                            <div className="col-md-12">
-                              <h6>{item.title}</h6>
-                            </div>
-
-                            {item?.plans?.length ? (
-                              item?.plans?.map((plan: any) => {
-                                return (
-                                  <div className="col-md-6">
-                                    <div
-                                      className="card card-body shadow-none rounded"
-                                      style={{ background: bg, border: 0 }}
-                                    >
-                                      <div className="d-flex justify-content-between mb-2">
-                                        <div className="d-flex align-items-center">
-                                          <h6 className="m-0">
-                                            {plan?.plan?.name}
-                                          </h6>
-                                        </div>
-                                        <div className="d-flex gap-2">
-                                          <Link
-                                            className="p-2 bg-white rounded"
-                                            to={{
-                                              pathname: `/programPlans/edit/${plan._id}`,
-                                            }}
-                                          >
-                                            <span
-                                              className="fas fa-pencil-alt"
-                                              aria-hidden="true"
-                                            ></span>
-                                          </Link>
-
-                                          <Link
-                                            className="p-2 bg-white rounded"
-                                            to={{
-                                              pathname: `/programPlans/details/${plan._id}`,
-                                            }}
-                                          >
-                                            <span
-                                              className="fas fa-eye text-warning"
-                                              aria-hidden="true"
-                                            ></span>
-                                          </Link>
-
-                                          <button className="btn p-2 bg-white rounded">
-                                            <span
-                                              className="fas fa-trash text-danger"
-                                              aria-hidden="true"
-                                            ></span>
-                                          </button>
-                                        </div>
-                                      </div>
-
-                                      <table
-                                        className="table-striped-new"
-                                        style={{ fontSize: "0.875rem" }}
-                                      >
-                                        <tbody>
-                                          <tr>
-                                            <td>Price (INR)</td>
-                                            <td className="d-flex gap-2">
-                                              <del className="text-danger">
-                                                ₹{plan?.mrpInr}
-                                              </del>
-                                              <span className="text-success">
-                                                ₹{plan?.salePriceInr}
-                                              </span>
-                                            </td>
-                                          </tr>
-
-                                          <tr>
-                                            <td>Price (Dollar)</td>
-                                            <td className="d-flex gap-2">
-                                              <del className="text-danger">
-                                                ${plan?.mrpDollar}
-                                              </del>
-                                              <span className="text-success">
-                                                ${plan?.salePriceDollar}
-                                              </span>
-                                            </td>
-                                          </tr>
-
-                                          <tr>
-                                            <td>PT Sessions</td>
-                                            <td className="d-flex gap-2">
-                                              {plan?.ptSession} Session
-                                            </td>
-                                          </tr>
-                                          <tr>
-                                            <td>Group Sessions</td>
-                                            <td className="d-flex gap-2">
-                                              {plan?.groupSession} Session
-                                            </td>
-                                          </tr>
-                                          <tr>
-                                            <td>Plan Duration</td>
-                                            <td className="d-flex gap-2">
-                                              {plan?.planDuration} Days
-                                            </td>
-                                          </tr>
-                                          <tr>
-                                            <td>Default Plan</td>
-                                            <td className="d-flex gap-2">
-                                              {plan?.isDefault ? (
-                                                <span className="text-success">
-                                                  Yes
-                                                </span>
-                                              ) : (
-                                                <span className="text-danger">
-                                                  No
-                                                </span>
-                                              )}
-                                            </td>
-                                          </tr>
-                                          <tr>
-                                            <td>Cancellable</td>
-                                            <td className="d-flex gap-2">
-                                              {plan?.isCancellable ? (
-                                                <span className="text-success">
-                                                  Yes
-                                                </span>
-                                              ) : (
-                                                <span className="text-danger">
-                                                  No
-                                                </span>
-                                              )}
-                                            </td>
-                                          </tr>
-                                          <tr>
-                                            <td>Cancellation Period</td>
-                                            <td className="d-flex gap-2">
-                                              {plan?.cancellationPeriod} Days
-                                            </td>
-                                          </tr>
-                                          <tr>
-                                            <td>Status</td>
-                                            <td className="d-flex gap-2">
-                                              {plan?.status ? (
-                                                <span className="text-success">
-                                                  Active
-                                                </span>
-                                              ) : (
-                                                <span className="text-danger">
-                                                  Disabled
-                                                </span>
-                                              )}
-                                            </td>
-                                          </tr>
-                                        </tbody>
-                                      </table>
-                                    </div>
+                      <div className="row gy-2 bg-light rounded py-2 mb-3">
+                        {programPlans?.map((plan: any, i: number) => {
+                          let bg = "#fff4e6";
+                          if (i == 1) bg = "#e5ffe6";
+                          if (i == 2) bg = "#fee9e4";
+                          if (i == 3) bg = "#e5ffff";
+                          return (
+                            <div className="col-md-6">
+                              <div
+                                className="card card-body shadow-none rounded"
+                                style={{ background: bg, border: 0 }}
+                              >
+                                <div className="d-flex justify-content-between mb-2">
+                                  <div className="d-flex align-items-center">
+                                    <h6 className="m-0">{plan?.plan?.name}</h6>
                                   </div>
-                                );
-                              })
-                            ) : (
-                              <div className="col-md-12">
-                                <div className="alert alert-danger">
-                                  Plan Not Available
+                                  <div className="d-flex gap-2">
+                                    <Link
+                                      className="p-2 bg-white rounded"
+                                      to={{
+                                        pathname: `/programPlans/edit/${plan._id}`,
+                                      }}
+                                    >
+                                      <span
+                                        className="fas fa-pencil-alt"
+                                        aria-hidden="true"
+                                      ></span>
+                                    </Link>
+
+                                    <Link
+                                      className="p-2 bg-white rounded"
+                                      to={{
+                                        pathname: `/programPlans/details/${plan._id}`,
+                                      }}
+                                    >
+                                      <span
+                                        className="fas fa-eye text-warning"
+                                        aria-hidden="true"
+                                      ></span>
+                                    </Link>
+
+                                    <button className="btn p-2 bg-white rounded">
+                                      <span
+                                        className="fas fa-trash text-danger"
+                                        aria-hidden="true"
+                                      ></span>
+                                    </button>
+                                  </div>
                                 </div>
+
+                                <table
+                                  className="table-striped-new"
+                                  style={{ fontSize: "0.875rem" }}
+                                >
+                                  <tbody>
+                                    <tr>
+                                      <td>Price (INR)</td>
+                                      <td className="d-flex gap-2">
+                                        <del className="text-danger">
+                                          ₹{plan?.mrpInr}
+                                        </del>
+                                        <span className="text-success">
+                                          ₹{plan?.salePriceInr}
+                                        </span>
+                                      </td>
+                                    </tr>
+
+                                    <tr>
+                                      <td>Price (Dollar)</td>
+                                      <td className="d-flex gap-2">
+                                        <del className="text-danger">
+                                          ${plan?.mrpDollar}
+                                        </del>
+                                        <span className="text-success">
+                                          ${plan?.salePriceDollar}
+                                        </span>
+                                      </td>
+                                    </tr>
+
+                                    <tr>
+                                      <td>PT Sessions</td>
+                                      <td className="d-flex gap-2">
+                                        {plan?.ptSession} Session
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>Group Sessions</td>
+                                      <td className="d-flex gap-2">
+                                        {plan?.groupSession} Session
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>Plan Duration</td>
+                                      <td className="d-flex gap-2">
+                                        {plan?.planDuration} Days
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>Default Plan</td>
+                                      <td className="d-flex gap-2">
+                                        {plan?.isDefault ? (
+                                          <span className="text-success">
+                                            Yes
+                                          </span>
+                                        ) : (
+                                          <span className="text-danger">
+                                            No
+                                          </span>
+                                        )}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>Cancellable</td>
+                                      <td className="d-flex gap-2">
+                                        {plan?.isCancellable ? (
+                                          <span className="text-success">
+                                            Yes
+                                          </span>
+                                        ) : (
+                                          <span className="text-danger">
+                                            No
+                                          </span>
+                                        )}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>Cancellation Period</td>
+                                      <td className="d-flex gap-2">
+                                        {plan?.cancellationPeriod} Days
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>Status</td>
+                                      <td className="d-flex gap-2">
+                                        {plan?.status ? (
+                                          <span className="text-success">
+                                            Active
+                                          </span>
+                                        ) : (
+                                          <span className="text-danger">
+                                            Disabled
+                                          </span>
+                                        )}
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
                               </div>
-                            )}
-                          </div>
-                        );
-                      })}
+                            </div>
+                          );
+                        })}
+                      </div>
                     </div>
                   </div>
                 </div>

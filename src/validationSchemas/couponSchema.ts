@@ -3,6 +3,7 @@ import {
   CoponUserTypes,
   CouponDiscountTypes,
   CouponStatusTypes,
+  CouponLevelTypes,
 } from "../constants";
 
 export const couponSchema = Yup.object({
@@ -15,6 +16,8 @@ export const couponSchema = Yup.object({
   programs: Yup.array().nullable().label("Programs"),
   plans: Yup.array().nullable().label("Plans"),
   autoApply: Yup.string().label("Auto Apply"),
+
+  couponLevel: Yup.object().required().label("Coupon Level"),
 
   description: Yup.string().label("Description"),
   minimumAmount: Yup.number().required().label("Minimum Amount"),
@@ -34,6 +37,8 @@ export const couponInitialValues: CouponValues = {
   programs: null,
   plans: null,
   autoApply: "false",
+
+  couponLevel: null,
 
   description: "",
   minimumAmount: "",
@@ -74,6 +79,11 @@ export interface CouponValues {
       }[]
     | null;
   autoApply: string;
+
+  couponLevel: {
+    label: string;
+    value: CouponLevelTypes;
+  } | null;
 
   description: string;
   minimumAmount: string;

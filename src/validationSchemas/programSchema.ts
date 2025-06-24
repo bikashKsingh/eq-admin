@@ -1,13 +1,15 @@
 import * as Yup from "yup";
 
-export const addProgramSchema = Yup.object({
+export const programSchema = Yup.object({
   name: Yup.string().required().label("Name"),
   slug: Yup.string().required().label("Slug"),
   category: Yup.object().required().label("Category"),
 
-  subCategory: Yup.object().required().label("Sub Category"),
+  sessionDuration: Yup.string().required().label("Session Duration"),
   displayOrder: Yup.number().required().label("Display Order"),
   isTrial: Yup.string().label("Is Trial"),
+
+  compareWith: Yup.object().nullable().label("Compare With"),
 
   defaultImage: Yup.string().required().label("Default Image"),
   defaultVideo: Yup.string().url().label("Default Image"),
@@ -32,16 +34,18 @@ export const addProgramSchema = Yup.object({
   isInjured: Yup.string().label("IS Injured"),
   yogaExperiences: Yup.array().label("Yoga Experiences"),
   timeSlots: Yup.array().label("Time Slots"),
-  budgets: Yup.array().label("Budgets"),
+  // budgets: Yup.array().label("Budgets"),
 });
 
 export const programInitialValues: ProgramValues = {
   name: "",
   slug: "",
   category: null,
-  subCategory: null,
+  sessionDuration: "0",
   displayOrder: "0",
   isTrial: "false",
+  compareWith: null,
+
   defaultImage: "",
   defaultVideo: "",
   images: null,
@@ -61,7 +65,7 @@ export const programInitialValues: ProgramValues = {
   isInjured: "false",
   yogaExperiences: null,
   timeSlots: null,
-  budgets: null,
+  // budgets: null,
 };
 
 export interface ProgramValues {
@@ -72,12 +76,13 @@ export interface ProgramValues {
     value: string;
   } | null;
 
-  subCategory: {
+  sessionDuration: string;
+  displayOrder: string;
+  isTrial: string;
+  compareWith: {
     label: string;
     value: string;
   } | null;
-  displayOrder: string;
-  isTrial: string;
 
   defaultImage: string;
   defaultVideo: string;
@@ -120,12 +125,12 @@ export interface ProgramValues {
         value: string;
       }[]
     | null;
-  budgets:
-    | {
-        label: string;
-        value: string;
-      }[]
-    | null;
+  // budgets:
+  //   | {
+  //       label: string;
+  //       value: string;
+  //     }[]
+  //   | null;
 }
 
 export type FileType = {

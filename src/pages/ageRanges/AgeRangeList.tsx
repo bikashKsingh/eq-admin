@@ -63,6 +63,7 @@ export function AgeRangeList() {
   type Record = {
     title: string;
     createdAt: string;
+    displayOrder: string;
     status: boolean;
     id: string;
   };
@@ -95,6 +96,10 @@ export function AgeRangeList() {
         accessor: "title",
       },
 
+      {
+        Header: "DISPLAY ORDER",
+        accessor: "displayOrder",
+      },
       {
         Header: "CREATED AT",
         accessor: "createdAt",
@@ -159,6 +164,7 @@ export function AgeRangeList() {
     return records.map((data) => {
       return {
         title: data.title,
+        displayOrder: data.displayOrder,
         createdAt: data.createdAt,
         status: data.status,
         id: data._id,

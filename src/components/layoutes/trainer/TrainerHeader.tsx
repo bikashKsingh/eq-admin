@@ -49,10 +49,10 @@ export function TrainerHeader() {
   return (
     <nav className="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
       <div className="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-        <Link className="navbar-brand brand-logo me-5" to="/trainer">
+        <Link className="navbar-brand brand-logo me-5" to="/trainer/">
           <img src="/images/black-logo.png" className="me-4" alt="logo" />
         </Link>
-        <Link className="navbar-brand brand-logo-mini" to="/trainer">
+        <Link className="navbar-brand brand-logo-mini" to="/trainer/">
           <img src="/images/black-logo.png" alt="logo" />
         </Link>
       </div>

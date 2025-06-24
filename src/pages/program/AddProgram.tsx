@@ -7,7 +7,7 @@ import {
 } from "../../components";
 import { FormikHelpers, useFormik } from "formik";
 import {
-  addProgramSchema,
+  programSchema,
   ProgramValues,
   programInitialValues,
 } from "../../validationSchemas/programSchema";
@@ -30,12 +30,18 @@ export function AddProgram() {
   const navigate = useNavigate();
 
   const [categories, setCategories] = useState([]);
-  const [subCategories, setSubCategories] = useState([]);
   const [programRequirements, setProgramRequirements] = useState([]);
   const [kycDocuments, setKycDocumnets] = useState<any[]>([]);
 
   const [loading, setLoading] = useState<boolean>(false);
   const [uspInputFields, setUspInputFields] = useState<string[]>([""]);
+
+  const [goals, setGoals] = useState<any[]>([]);
+  const [ageRanges, setAgeRanges] = useState<any[]>([]);
+  const [yogaExperiences, setYogaExperiences] = useState<any[]>([]);
+  const [timeSlots, setTimeSlots] = useState<any[]>([]);
+  const [budgets, setBudgets] = useState<any[]>([]);
+  const [programsForCompare, setProgramsForCompare] = useState<any[]>([]);
 
   const {
     values,
@@ -81,12 +87,30 @@ export function AddProgram() {
       const newValue = {
         ...values,
         category: values.category?.value,
-        subCategory: values.subCategory?.value,
         faqs,
         images: values.images || [],
         requirements: requirements,
         usp: usp,
+        compareWith: values?.compareWith?.value,
       };
+
+      if (values.goals?.length) {
+        newValue.goals = values.goals.map((item: any) => item.value);
+      }
+      if (values.ageRanges?.length) {
+        newValue.ageRanges = values.ageRanges.map((item: any) => item.value);
+      }
+      if (values.yogaExperiences?.length) {
+        newValue.yogaExperiences = values.yogaExperiences.map(
+          (item: any) => item.value
+        );
+      }
+      if (values.timeSlots?.length) {
+        newValue.timeSlots = values.timeSlots.map((item: any) => item.value);
+      }
+      // if (values.budgets?.length) {
+      //   newValue.budgets = values.budgets.map((item: any) => item.value);
+      // }
 
       const apiResponse = await post("/programs", newValue, true);
 
@@ -100,7 +124,7 @@ export function AddProgram() {
       setLoading(false);
     },
     initialValues: programInitialValues,
-    validationSchema: addProgramSchema,
+    validationSchema: programSchema,
   });
 
   type Certificate = { question: string; answer: string; error: string };
@@ -112,7 +136,7 @@ export function AddProgram() {
     },
   ]);
 
-  // get category
+  // get program requirements
   useEffect(function () {
     async function getData() {
       const apiResponse = await get("/programRequirements", true);
@@ -124,6 +148,24 @@ export function AddProgram() {
           };
         });
         setProgramRequirements(modifiedValue);
+      }
+    }
+
+    getData();
+  }, []);
+
+  // get get progrms for compare
+  useEffect(function () {
+    async function getData() {
+      const apiResponse = await get(`/programs`, true);
+      if (apiResponse?.status == 200) {
+        const modifiedValue = apiResponse?.body?.map((value: any) => {
+          return {
+            label: value.name,
+            value: value._id,
+          };
+        });
+        setProgramsForCompare(modifiedValue);
       }
     }
 
@@ -148,23 +190,6 @@ export function AddProgram() {
     getData();
   }, []);
 
-  // get sub category
-  useEffect(function () {
-    async function getData() {
-      const apiResponse = await get("/subCategories", true);
-      if (apiResponse?.status == 200) {
-        const modifiedValue = apiResponse?.body?.map((value: any) => {
-          return {
-            label: value.name,
-            value: value._id,
-          };
-        });
-        setSubCategories(modifiedValue);
-      }
-    }
-    getData();
-  }, []);
-
   // get kyc documents
   useEffect(function () {
     async function getData() {
@@ -182,125 +207,95 @@ export function AddProgram() {
     getData();
   }, []);
 
-  // handleUploadFile
-  // async function handleUploadFile(
-  //   event: React.ChangeEvent<HTMLInputElement>,
-  //   acceptType: any,
-  //   index: number
-  // ) {
-  //   const mimeTypes = acceptType?.map((value: any) => value.mimeType) || [
-  //     "application/pdf",
-  //   ];
+  // get goals
+  useEffect(function () {
+    async function getData() {
+      const apiResponse = await get("/goals?displayOrder=ASC", true);
+      if (apiResponse?.status == 200) {
+        const modifiedValue = apiResponse?.body?.map((value: any) => {
+          return {
+            label: value.title,
+            value: value._id,
+          };
+        });
+        setGoals(modifiedValue);
+      }
+    }
 
-  //   const files = event.target.files;
-  //   const inputElementName: "certificateFile" | "kycFile" = event.target
-  //     .name as "certificateFile" | "kycFile";
+    getData();
+  }, []);
 
-  //   if (!files || files.length === 0) {
-  //     toast.error("Please select at least one file.");
-  //     return;
-  //   }
+  // get ageRanges
+  useEffect(function () {
+    async function getData() {
+      const apiResponse = await get("/ageRanges?displayOrder=ASC", true);
+      if (apiResponse?.status == 200) {
+        const modifiedValue = apiResponse?.body?.map((value: any) => {
+          return {
+            label: value.title,
+            value: value._id,
+          };
+        });
+        setAgeRanges(modifiedValue);
+      }
+    }
 
-  //   const formData = new FormData();
+    getData();
+  }, []);
 
-  //   // Validate MIME type and append valid files to FormData
-  //   for (let i = 0; i < files.length; i++) {
-  //     const file = files[i];
+  // get yogaExperiences
+  useEffect(function () {
+    async function getData() {
+      const apiResponse = await get("/yogaExperiences?displayOrder=ASC", true);
+      if (apiResponse?.status == 200) {
+        const modifiedValue = apiResponse?.body?.map((value: any) => {
+          return {
+            label: value.title,
+            value: value._id,
+          };
+        });
+        setYogaExperiences(modifiedValue);
+      }
+    }
 
-  //     // Check if the file's MIME type is in the allowed list
-  //     if (!mimeTypes.includes(file.type)) {
-  //       if (inputElementName == "kycFile") {
-  //         let kycDocsFiles = [...kycDocuments];
-  //         kycDocuments[index]["error"] = "File type is not allowed";
-  //         return setKycDocumnets(kycDocsFiles);
-  //       } else if (inputElementName == "certificateFile") {
-  //         let certificateFields = [...faqsInputFields];
-  //         certificateFields[index]["error"] = "File type is not allowed";
-  //         return setFaqsInputFields(certificateFields);
-  //       }
-  //     }
-  //   }
+    getData();
+  }, []);
 
-  //   // Append each file to the FormData object
-  //   for (let i = 0; i < files.length; i++) {
-  //     formData.append("files", files[i]);
-  //   }
+  // get timeSlots
+  useEffect(function () {
+    async function getData() {
+      const apiResponse = await get("/timeSlots?displayOrder=ASC", true);
+      if (apiResponse?.status == 200) {
+        const modifiedValue = apiResponse?.body?.map((value: any) => {
+          return {
+            label: value.title,
+            value: value._id,
+          };
+        });
+        setTimeSlots(modifiedValue);
+      }
+    }
 
-  //   try {
-  //     let url = `${API_URL}/fileUploads`;
-  //     const apiResponse = await fetch(url, {
-  //       method: "POST",
-  //       body: formData,
-  //     });
+    getData();
+  }, []);
 
-  //     const apiData = await apiResponse.json();
+  // get budgets
+  useEffect(function () {
+    async function getData() {
+      const apiResponse = await get("/budgets?displayOrder=ASC", true);
 
-  //     if (apiData.status == 200) {
-  //       if (inputElementName == "kycFile") {
-  //         let kycDocsFiles = [...kycDocuments];
-  //         kycDocuments[index]["error"] = "";
-  //         kycDocuments[index]["file"] = apiData.body[0];
-  //         setKycDocumnets(kycDocsFiles);
-  //       } else if (inputElementName == "certificateFile") {
-  //         let certificateFields = [...faqsInputFields];
-  //         certificateFields[index]["error"] = "";
-  //         certificateFields[index]["file"] = apiData.body[0];
-  //         setFaqsInputFields(certificateFields);
-  //       }
-  //     }
-  //   } catch (error: any) {
-  //     toast.error(error?.message);
-  //   }
-
-  // }
-
-  // handleDeleteFile
-  // async function handleDeleteFile(
-  //   event: React.MouseEvent<HTMLButtonElement>,
-  //   fileName: string,
-  //   index: number,
-  //   deleteFile?: "kycFile" | "certificateFile"
-  // ) {
-  //   event.preventDefault();
-
-  //   try {
-  //     const apiResponse = await remove(`/fileUploads/${fileName}`);
-  //     if (apiResponse?.status == 200) {
-  //       if (deleteFile == "kycFile") {
-  //         let kycDocsFiles = [...kycDocuments];
-  //         kycDocuments[index]["error"] = "";
-  //         kycDocuments[index]["file"] = null;
-  //         setKycDocumnets(kycDocsFiles);
-  //       } else if (deleteFile == "certificateFile") {
-  //         let certificateFields = [...faqsInputFields];
-  //         certificateFields[index]["error"] = "";
-  //         certificateFields[index]["file"] = null;
-  //         setFaqsInputFields(certificateFields);
-  //       }
-  //     } else {
-  //       toast.error(apiResponse?.message);
-  //     }
-
-  //     // Clear the input field value after the file is deleted successfully
-  //     if (deleteFile == "kycFile") {
-  //       const fileInput = document.getElementById(
-  //         `kycInputFile${index}`
-  //       ) as HTMLInputElement;
-  //       if (fileInput) {
-  //         fileInput.value = ""; // Clear the input field
-  //       }
-  //     } else if (deleteFile == "certificateFile") {
-  //       const fileInput = document.getElementById(
-  //         `certificateInputFile${index}`
-  //       ) as HTMLInputElement;
-  //       if (fileInput) {
-  //         fileInput.value = ""; // Clear the input field
-  //       }
-  //     }
-  //   } catch (error: any) {
-  //     toast.error(error?.message);
-  //   }
-  // }
+      if (apiResponse?.status == 200) {
+        const modifiedValue = apiResponse?.body?.map((value: any) => {
+          return {
+            label: `${value.minimum}-${value.maximum}`,
+            value: value._id,
+          };
+        });
+        setBudgets(modifiedValue);
+      }
+    }
+    getData();
+  }, []);
 
   // handleUploadProfilePic
   async function handleUploadProfilePic(
@@ -420,6 +415,7 @@ export function AddProgram() {
   const handleAddUspFields = () => {
     setUspInputFields([...uspInputFields, ""]);
   };
+
   const handleRemoveUspFields = (index: number) => {
     const updatedInputFields = [...uspInputFields];
     updatedInputFields.splice(index, 1);
@@ -564,21 +560,17 @@ export function AddProgram() {
                   </div>
 
                   <div className="form-group col-md-6">
-                    <CustomSelect
-                      label="Program Sub Category"
-                      placeholder="Select sub Category"
-                      name="subCategory"
+                    <InputBox
+                      label="Program Session Duration in Minutes"
+                      name="sessionDuration"
+                      handleBlur={handleBlur}
+                      handleChange={handleChange}
+                      type="number"
+                      placeholder="Enter session duration"
+                      value={values.sessionDuration}
                       required={true}
-                      options={subCategories}
-                      value={values.subCategory}
-                      error={errors.subCategory}
-                      touched={touched.subCategory}
-                      handleChange={(value) => {
-                        setFieldValue("subCategory", value);
-                      }}
-                      handleBlur={() => {
-                        setFieldTouched("subCategory", true);
-                      }}
+                      touched={touched.sessionDuration}
+                      error={errors.sessionDuration}
                     />
                   </div>
 
@@ -587,7 +579,7 @@ export function AddProgram() {
                       label="Display Order"
                       name="displayOrder"
                       handleBlur={handleBlur}
-                      handleChange={handleNameChange}
+                      handleChange={handleChange}
                       type="number"
                       placeholder="Enter display order"
                       value={values.displayOrder}
@@ -675,6 +667,178 @@ export function AddProgram() {
                     {errors.status && touched.status ? (
                       <p className="custom-form-error text-danger">
                         {errors.status}
+                      </p>
+                    ) : null}
+                  </div>
+
+                  <div className="form-group col-md-6">
+                    <CustomSelect
+                      label="Select Program For Compare"
+                      placeholder="Select Program"
+                      name="compareWith"
+                      required={false}
+                      options={programsForCompare}
+                      value={values.compareWith}
+                      error={errors.compareWith}
+                      touched={touched.compareWith}
+                      handleChange={(value) => {
+                        setFieldValue("compareWith", value);
+                      }}
+                      handleBlur={() => {
+                        setFieldTouched("compareWith", true);
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Build Plan */}
+            <div className="card rounded-2 mt-4">
+              <div className="card-body">
+                <div className="row">
+                  <div className="col-md-12">
+                    <h5 className="mb-2">Build Plan</h5>
+                  </div>
+
+                  <div className="form-group col-md-6">
+                    <CustomSelect
+                      label="Select Goal"
+                      placeholder="Select goal"
+                      name="goals"
+                      required={true}
+                      options={goals}
+                      value={values.goals}
+                      error={errors.goals}
+                      touched={touched.goals}
+                      isMulti={true}
+                      handleChange={(value) => {
+                        setFieldValue("goals", value);
+                      }}
+                      handleBlur={() => {
+                        setFieldTouched("goals", true);
+                      }}
+                    />
+                  </div>
+
+                  <div className="form-group col-md-6">
+                    <CustomSelect
+                      label="Select Age Ranges"
+                      placeholder="Select age ranges"
+                      name="ageRanges"
+                      required={true}
+                      options={ageRanges}
+                      value={values.ageRanges}
+                      error={errors.ageRanges}
+                      touched={touched.ageRanges}
+                      isMulti={true}
+                      handleChange={(value) => {
+                        setFieldValue("ageRanges", value);
+                      }}
+                      handleBlur={() => {
+                        setFieldTouched("ageRanges", true);
+                      }}
+                    />
+                  </div>
+
+                  <div className="form-group col-md-6">
+                    <CustomSelect
+                      label="Select Yoga Experiences"
+                      placeholder="Select yoga experience"
+                      name="yogaExperiences"
+                      required={true}
+                      options={yogaExperiences}
+                      value={values.yogaExperiences}
+                      error={errors.yogaExperiences}
+                      touched={touched.yogaExperiences}
+                      isMulti={true}
+                      handleChange={(value) => {
+                        setFieldValue("yogaExperiences", value);
+                      }}
+                      handleBlur={() => {
+                        setFieldTouched("yogaExperiences", true);
+                      }}
+                    />
+                  </div>
+
+                  <div className="form-group col-md-6">
+                    <CustomSelect
+                      label="Select Time Slots"
+                      placeholder="Select time slots"
+                      name="timeSlots"
+                      required={true}
+                      options={timeSlots}
+                      value={values.timeSlots}
+                      error={errors.timeSlots}
+                      touched={touched.timeSlots}
+                      isMulti={true}
+                      handleChange={(value) => {
+                        setFieldValue("timeSlots", value);
+                      }}
+                      handleBlur={() => {
+                        setFieldTouched("timeSlots", true);
+                      }}
+                    />
+                  </div>
+
+                  {/* <div className="form-group col-md-6">
+                    <CustomSelect
+                      label="Select Budgets"
+                      placeholder="Select budget"
+                      name="budgets"
+                      required={true}
+                      options={budgets}
+                      value={values.budgets}
+                      error={errors.budgets}
+                      touched={touched.budgets}
+                      isMulti={true}
+                      handleChange={(value) => {
+                        setFieldValue("budgets", value);
+                      }}
+                      handleBlur={() => {
+                        setFieldTouched("budgets", true);
+                      }}
+                    />
+                  </div> */}
+
+                  <div className="form-group col-md-3">
+                    <label htmlFor="">
+                      Recovering From Any Injury?{" "}
+                      <span className="text-danger">*</span>
+                    </label>
+                    <div className="d-flex gap-3">
+                      <div className="d-flex align-items-center gap-2">
+                        <input
+                          type="radio"
+                          name="isInjured"
+                          id="isInjuredTrue"
+                          value={"true"}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          checked={values.isInjured == "true"}
+                        />
+                        <label htmlFor="isInjuredTrue" className="mt-2">
+                          Yes
+                        </label>
+                      </div>
+                      <div className="d-flex align-items-center gap-1">
+                        <input
+                          type="radio"
+                          name="isInjured"
+                          id="isInjuredFalse"
+                          value={"false"}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          checked={values.isInjured == "false"}
+                        />
+                        <label htmlFor="isInjuredFalse" className="mt-2">
+                          No
+                        </label>
+                      </div>
+                    </div>
+                    {errors.isInjured && touched.isInjured ? (
+                      <p className="custom-form-error text-danger">
+                        {errors.isInjured}
                       </p>
                     ) : null}
                   </div>
@@ -833,9 +997,8 @@ export function AddProgram() {
                               value={feild}
                               onChange={(e) => {
                                 const updatedInputFields = [...uspInputFields];
-                                updatedInputFields[index] = validateTextNumber(
-                                  e.target.value
-                                );
+                                updatedInputFields[index] = e.target.value;
+                                // validateTextNumber(e.target.value);
                                 setUspInputFields(updatedInputFields);
                               }}
                               placeholder="Enter USP"

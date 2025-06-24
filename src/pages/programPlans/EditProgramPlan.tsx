@@ -26,7 +26,7 @@ export function EditProgramPlan() {
   const [plans, setPlans] = useState<any[]>([]);
 
   const [loading, setLoading] = useState<boolean>(false);
-  const [planTypes, setPlanTypes] = useState<any[]>([]);
+  // const [planTypes, setPlanTypes] = useState<any[]>([]);
 
   const [programDetails, setProgramDetails] = useState<any>(null);
 
@@ -49,7 +49,7 @@ export function EditProgramPlan() {
         ...values,
         program: programDetails._id,
         plan: values?.plan?.value,
-        planType: values?.planType?.value,
+        // planType: values?.planType?.value,
       };
 
       const apiResponse = await put(`/programPlans/${id}`, newValue);
@@ -125,10 +125,10 @@ export function EditProgramPlan() {
             value: apiData.plan._id,
           };
 
-          apiData.planType = {
-            label: apiData?.planType?.title,
-            value: apiData?.planType?._id,
-          };
+          // apiData.planType = {
+          //   label: apiData?.planType?.title,
+          //   value: apiData?.planType?._id,
+          // };
 
           setProgramDetails(apiData.program);
           delete apiData.program;
@@ -145,22 +145,22 @@ export function EditProgramPlan() {
   );
 
   // get plan type
-  useEffect(function () {
-    async function getData() {
-      const apiResponse = await get("/planTypes", true);
-      if (apiResponse?.status == 200) {
-        const modifiedValue = apiResponse?.body?.map((value: any) => {
-          return {
-            label: value.title,
-            value: value._id,
-          };
-        });
-        setPlanTypes(modifiedValue);
-      }
-    }
+  // useEffect(function () {
+  //   async function getData() {
+  //     const apiResponse = await get("/planTypes", true);
+  //     if (apiResponse?.status == 200) {
+  //       const modifiedValue = apiResponse?.body?.map((value: any) => {
+  //         return {
+  //           label: value.title,
+  //           value: value._id,
+  //         };
+  //       });
+  //       setPlanTypes(modifiedValue);
+  //     }
+  //   }
 
-    getData();
-  }, []);
+  //   getData();
+  // }, []);
 
   return (
     <div className="content-wrapper">
@@ -207,7 +207,7 @@ export function EditProgramPlan() {
                     />
                   </div> */}
 
-                  <div className="form-group col-md-6">
+                  {/* <div className="form-group col-md-6">
                     <CustomSelect
                       label="Select Plan Type"
                       placeholder="Select plan type"
@@ -225,7 +225,7 @@ export function EditProgramPlan() {
                         setFieldTouched("planType", true);
                       }}
                     />
-                  </div>
+                  </div> */}
 
                   <div className="form-group col-md-6">
                     <CustomSelect
@@ -246,6 +246,88 @@ export function EditProgramPlan() {
                       }}
                     />
                   </div>
+
+                  <div className="form-group col-md-3">
+                    <label htmlFor="">
+                      Default Plan <span className="text-danger"> *</span>
+                    </label>
+                    <div className="d-flex gap-3">
+                      <div className="d-flex align-items-center gap-2">
+                        <input
+                          type="radio"
+                          name="isDefault"
+                          id="defaultTrue"
+                          value={"true"}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          checked={values.isDefault == "true"}
+                        />
+                        <label htmlFor="defaultTrue" className="mt-2">
+                          Yes
+                        </label>
+                      </div>
+                      <div className="d-flex align-items-center gap-1">
+                        <input
+                          type="radio"
+                          name="isDefault"
+                          id="defaultFalse"
+                          value={"false"}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          checked={values.isDefault == "false"}
+                        />
+                        <label htmlFor="defaultFalse" className="mt-2">
+                          No
+                        </label>
+                      </div>
+                    </div>
+                    {errors.isDefault && touched.isDefault ? (
+                      <p className="custom-form-error text-danger">
+                        {errors.isDefault}
+                      </p>
+                    ) : null}
+                  </div>
+                  <div className="form-group col-md-3">
+                    <label htmlFor="">
+                      Status <span className="text-danger"> *</span>
+                    </label>
+                    <div className="d-flex gap-3">
+                      <div className="d-flex align-items-center gap-2">
+                        <input
+                          type="radio"
+                          name="status"
+                          id="statusTrue"
+                          value={"true"}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          checked={values.status == "true"}
+                        />
+                        <label htmlFor="statusTrue" className="mt-2">
+                          Active
+                        </label>
+                      </div>
+                      <div className="d-flex align-items-center gap-1">
+                        <input
+                          type="radio"
+                          name="status"
+                          id="statusFalse"
+                          value={"false"}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          checked={values.status == "false"}
+                        />
+                        <label htmlFor="statusFalse" className="mt-2">
+                          Disabled
+                        </label>
+                      </div>
+                    </div>
+                    {errors.status && touched.status ? (
+                      <p className="custom-form-error text-danger">
+                        {errors.status}
+                      </p>
+                    ) : null}
+                  </div>
+
                   <div className="form-group col-md-12">
                     <TextareaBox
                       label="Short Description"
@@ -375,47 +457,6 @@ export function EditProgramPlan() {
                     />
                   </div>
 
-                  <div className="form-group col-md-6">
-                    <label htmlFor="">
-                      Default Plan <span className="text-danger"> *</span>
-                    </label>
-                    <div className="d-flex gap-3">
-                      <div className="d-flex align-items-center gap-2">
-                        <input
-                          type="radio"
-                          name="isDefault"
-                          id="defaultTrue"
-                          value={"true"}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          checked={values.isDefault == "true"}
-                        />
-                        <label htmlFor="defaultTrue" className="mt-2">
-                          Yes
-                        </label>
-                      </div>
-                      <div className="d-flex align-items-center gap-1">
-                        <input
-                          type="radio"
-                          name="isDefault"
-                          id="defaultFalse"
-                          value={"false"}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          checked={values.isDefault == "false"}
-                        />
-                        <label htmlFor="defaultFalse" className="mt-2">
-                          No
-                        </label>
-                      </div>
-                    </div>
-                    {errors.isDefault && touched.isDefault ? (
-                      <p className="custom-form-error text-danger">
-                        {errors.isDefault}
-                      </p>
-                    ) : null}
-                  </div>
-
                   {/* <div className="form-group col-md-6">
                     <label htmlFor="">
                       Cancellable <span className="text-danger"> *</span>
@@ -471,47 +512,6 @@ export function EditProgramPlan() {
                       error={errors.cancellationPeriod}
                     />
                   </div> */}
-
-                  <div className="form-group col-md-6">
-                    <label htmlFor="">
-                      Status <span className="text-danger"> *</span>
-                    </label>
-                    <div className="d-flex gap-3">
-                      <div className="d-flex align-items-center gap-2">
-                        <input
-                          type="radio"
-                          name="status"
-                          id="statusTrue"
-                          value={"true"}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          checked={values.status == "true"}
-                        />
-                        <label htmlFor="statusTrue" className="mt-2">
-                          Active
-                        </label>
-                      </div>
-                      <div className="d-flex align-items-center gap-1">
-                        <input
-                          type="radio"
-                          name="status"
-                          id="statusFalse"
-                          value={"false"}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          checked={values.status == "false"}
-                        />
-                        <label htmlFor="statusFalse" className="mt-2">
-                          Disabled
-                        </label>
-                      </div>
-                    </div>
-                    {errors.status && touched.status ? (
-                      <p className="custom-form-error text-danger">
-                        {errors.status}
-                      </p>
-                    ) : null}
-                  </div>
                 </div>
               </div>
             </div>

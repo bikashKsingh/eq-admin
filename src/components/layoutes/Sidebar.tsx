@@ -60,6 +60,18 @@ export function Sidebar() {
                   Payment Seting
                 </Link>
               </li>
+
+              <li className="nav-item">
+                <Link className="nav-link" to="/onboardingSteps">
+                  Onbarding Steps
+                </Link>
+              </li>
+
+              <li className="nav-item">
+                <Link className="nav-link" to="/bookingTimeSlots">
+                  Booking Time Slots
+                </Link>
+              </li>
             </ul>
           </div>
         </li>
@@ -130,11 +142,11 @@ export function Sidebar() {
                   Main Categories
                 </Link>
               </li>
-              <li className="nav-item">
+              {/* <li className="nav-item">
                 <Link className="nav-link" to="/subCategories">
                   Sub Categories
                 </Link>
-              </li>
+              </li> */}
 
               {/* <li className="nav-item">
                 <Link className="nav-link" to="/subCategories">
@@ -241,11 +253,11 @@ export function Sidebar() {
                   Plans
                 </Link>
               </li>
-              <li className="nav-item">
+              {/* <li className="nav-item">
                 <Link className="nav-link" to="/planTypes">
                   Plan Types
                 </Link>
-              </li>
+              </li> */}
               <li className="nav-item">
                 <Link className="nav-link" to="/programs">
                   Program List
@@ -254,6 +266,30 @@ export function Sidebar() {
               <li className="nav-item">
                 <Link className="nav-link" to="/programPlans">
                   Program Plan List
+                </Link>
+              </li>
+            </ul>
+          </div>
+        </li>
+
+        {/* Leads */}
+        <li className="nav-item">
+          <a
+            className="nav-link"
+            data-bs-toggle="collapse"
+            href="#leads"
+            aria-expanded="false"
+            aria-controls="leads"
+          >
+            <i className="ti-files menu-icon"></i>
+            <span className="menu-title">Leads</span>
+            <i className="menu-arrow"></i>
+          </a>
+          <div className="collapse" id="leads">
+            <ul className="nav flex-column sub-menu">
+              <li className="nav-item">
+                <Link className="nav-link" to="/buildPlanLeads">
+                  Build Plan Leads
                 </Link>
               </li>
             </ul>

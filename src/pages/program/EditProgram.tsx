@@ -8,7 +8,7 @@ import {
 } from "../../components";
 import { FormikHelpers, useFormik } from "formik";
 import {
-  addProgramSchema,
+  programSchema,
   ProgramValues,
   programInitialValues,
 } from "../../validationSchemas/programSchema";
@@ -45,6 +45,7 @@ export function EditProgram() {
   const [yogaExperiences, setYogaExperiences] = useState<any[]>([]);
   const [timeSlots, setTimeSlots] = useState<any[]>([]);
   const [budgets, setBudgets] = useState<any[]>([]);
+  const [programsForCompare, setProgramsForCompare] = useState<any[]>([]);
 
   const {
     values,
@@ -91,7 +92,8 @@ export function EditProgram() {
       const newValue = {
         ...values,
         category: values.category?.value,
-        subCategory: values.subCategory?.value,
+        compareWith: values?.compareWith?.value,
+        subCategory: undefined,
         faqs,
         images: values.images || [],
         requirements: requirements,
@@ -114,9 +116,9 @@ export function EditProgram() {
       if (values.timeSlots?.length) {
         newValue.timeSlots = values.timeSlots.map((item: any) => item.value);
       }
-      if (values.budgets?.length) {
-        newValue.budgets = values.budgets.map((item: any) => item.value);
-      }
+      // if (values.budgets?.length) {
+      //   newValue.budgets = values.budgets.map((item: any) => item.value);
+      // }
 
       const apiResponse = await put(`/programs/${id}`, newValue);
 
@@ -130,11 +132,29 @@ export function EditProgram() {
       setLoading(false);
     },
     initialValues: programInitialValues,
-    validationSchema: addProgramSchema,
+    validationSchema: programSchema,
   });
 
   type Certificate = { question: string; answer: string; error: string };
   const [faqsInputFields, setFaqsInputFields] = useState<Certificate[]>([]);
+
+  // get get progrms for compare
+  useEffect(function () {
+    async function getData() {
+      const apiResponse = await get(`/programs?withoutProgram=${id}`, true);
+      if (apiResponse?.status == 200) {
+        const modifiedValue = apiResponse?.body?.map((value: any) => {
+          return {
+            label: value.name,
+            value: value._id,
+          };
+        });
+        setProgramsForCompare(modifiedValue);
+      }
+    }
+
+    getData();
+  }, []);
 
   // get programRequirements
   useEffect(function () {
@@ -220,14 +240,16 @@ export function EditProgram() {
           delete data.createdAt;
           delete data.updatedAt;
 
+          data.isInjured = `${data.isInjured}`;
+
+          data.compareWith = {
+            label: data?.compareWith?.name,
+            value: data?.compareWith?._id,
+          };
+
           data.category = {
             label: data.category.name,
             value: data.category._id,
-          };
-
-          data.subCategory = {
-            label: data?.subCategory?.name,
-            value: data?.subCategory?._id,
           };
 
           data.status = `${data.status}`;
@@ -287,14 +309,14 @@ export function EditProgram() {
             });
           }
 
-          if (data?.budgets?.length) {
-            data.budgets = data?.budgets?.map((item: any) => {
-              return {
-                label: `${item.minimum}-${item.maximum}`,
-                value: item._id,
-              };
-            });
-          }
+          // if (data?.budgets?.length) {
+          //   data.budgets = data?.budgets?.map((item: any) => {
+          //     return {
+          //       label: `${item.minimum}-${item.maximum}`,
+          //       value: item._id,
+          //     };
+          //   });
+          // }
 
           setValues(data);
           setUspInputFields(data.usp);
@@ -395,126 +417,6 @@ export function EditProgram() {
     }
     getData();
   }, []);
-
-  // handleUploadFile
-  // async function handleUploadFile(
-  //   event: React.ChangeEvent<HTMLInputElement>,
-  //   acceptType: any,
-  //   index: number
-  // ) {
-  //   const mimeTypes = acceptType?.map((value: any) => value.mimeType) || [
-  //     "application/pdf",
-  //   ];
-
-  //   const files = event.target.files;
-  //   const inputElementName: "certificateFile" | "kycFile" = event.target
-  //     .name as "certificateFile" | "kycFile";
-
-  //   if (!files || files.length === 0) {
-  //     toast.error("Please select at least one file.");
-  //     return;
-  //   }
-
-  //   const formData = new FormData();
-
-  //   // Validate MIME type and append valid files to FormData
-  //   for (let i = 0; i < files.length; i++) {
-  //     const file = files[i];
-
-  //     // Check if the file's MIME type is in the allowed list
-  //     if (!mimeTypes.includes(file.type)) {
-  //       if (inputElementName == "kycFile") {
-  //         let kycDocsFiles = [...kycDocuments];
-  //         kycDocuments[index]["error"] = "File type is not allowed";
-  //         return setKycDocumnets(kycDocsFiles);
-  //       } else if (inputElementName == "certificateFile") {
-  //         let certificateFields = [...faqsInputFields];
-  //         certificateFields[index]["error"] = "File type is not allowed";
-  //         return setFaqsInputFields(certificateFields);
-  //       }
-  //     }
-  //   }
-
-  //   // Append each file to the FormData object
-  //   for (let i = 0; i < files.length; i++) {
-  //     formData.append("files", files[i]);
-  //   }
-
-  //   try {
-  //     let url = `${API_URL}/fileUploads`;
-  //     const apiResponse = await fetch(url, {
-  //       method: "POST",
-  //       body: formData,
-  //     });
-
-  //     const apiData = await apiResponse.json();
-
-  //     if (apiData.status == 200) {
-  //       if (inputElementName == "kycFile") {
-  //         let kycDocsFiles = [...kycDocuments];
-  //         kycDocuments[index]["error"] = "";
-  //         kycDocuments[index]["file"] = apiData.body[0];
-  //         setKycDocumnets(kycDocsFiles);
-  //       } else if (inputElementName == "certificateFile") {
-  //         let certificateFields = [...faqsInputFields];
-  //         certificateFields[index]["error"] = "";
-  //         certificateFields[index]["file"] = apiData.body[0];
-  //         setFaqsInputFields(certificateFields);
-  //       }
-  //     }
-  //   } catch (error: any) {
-  //     toast.error(error?.message);
-  //   }
-
-  // }
-
-  // handleDeleteFile
-  // async function handleDeleteFile(
-  //   event: React.MouseEvent<HTMLButtonElement>,
-  //   fileName: string,
-  //   index: number,
-  //   deleteFile?: "kycFile" | "certificateFile"
-  // ) {
-  //   event.preventDefault();
-
-  //   try {
-  //     const apiResponse = await remove(`/fileUploads/${fileName}`);
-  //     if (apiResponse?.status == 200) {
-  //       if (deleteFile == "kycFile") {
-  //         let kycDocsFiles = [...kycDocuments];
-  //         kycDocuments[index]["error"] = "";
-  //         kycDocuments[index]["file"] = null;
-  //         setKycDocumnets(kycDocsFiles);
-  //       } else if (deleteFile == "certificateFile") {
-  //         let certificateFields = [...faqsInputFields];
-  //         certificateFields[index]["error"] = "";
-  //         certificateFields[index]["file"] = null;
-  //         setFaqsInputFields(certificateFields);
-  //       }
-  //     } else {
-  //       toast.error(apiResponse?.message);
-  //     }
-
-  //     // Clear the input field value after the file is deleted successfully
-  //     if (deleteFile == "kycFile") {
-  //       const fileInput = document.getElementById(
-  //         `kycInputFile${index}`
-  //       ) as HTMLInputElement;
-  //       if (fileInput) {
-  //         fileInput.value = ""; // Clear the input field
-  //       }
-  //     } else if (deleteFile == "certificateFile") {
-  //       const fileInput = document.getElementById(
-  //         `certificateInputFile${index}`
-  //       ) as HTMLInputElement;
-  //       if (fileInput) {
-  //         fileInput.value = ""; // Clear the input field
-  //       }
-  //     }
-  //   } catch (error: any) {
-  //     toast.error(error?.message);
-  //   }
-  // }
 
   // handleUploadProfilePic
   async function handleUploadProfilePic(
@@ -779,22 +681,19 @@ export function EditProgram() {
                         }}
                       />
                     </div>
+
                     <div className="form-group col-md-6">
-                      <CustomSelect
-                        label="Program Sub Category"
-                        placeholder="Select sub Category"
-                        name="subCategory"
+                      <InputBox
+                        label="Program Session Duration in Minutes"
+                        name="sessionDuration"
+                        handleBlur={handleBlur}
+                        handleChange={handleChange}
+                        type="number"
+                        placeholder="Enter session duration"
+                        value={values.sessionDuration}
                         required={true}
-                        options={subCategories}
-                        value={values.subCategory}
-                        error={errors.subCategory}
-                        touched={touched.subCategory}
-                        handleChange={(value) => {
-                          setFieldValue("subCategory", value);
-                        }}
-                        handleBlur={() => {
-                          setFieldTouched("subCategory", true);
-                        }}
+                        touched={touched.sessionDuration}
+                        error={errors.sessionDuration}
                       />
                     </div>
 
@@ -894,6 +793,25 @@ export function EditProgram() {
                         </p>
                       ) : null}
                     </div>
+
+                    <div className="form-group col-md-6">
+                      <CustomSelect
+                        label="Select Program For Compare"
+                        placeholder="Select Program"
+                        name="compareWith"
+                        required={true}
+                        options={programsForCompare}
+                        value={values.compareWith}
+                        error={errors.compareWith}
+                        touched={touched.compareWith}
+                        handleChange={(value) => {
+                          setFieldValue("compareWith", value);
+                        }}
+                        handleBlur={() => {
+                          setFieldTouched("compareWith", true);
+                        }}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -986,7 +904,7 @@ export function EditProgram() {
                       />
                     </div>
 
-                    <div className="form-group col-md-6">
+                    {/* <div className="form-group col-md-6">
                       <CustomSelect
                         label="Select Budgets"
                         placeholder="Select budget"
@@ -1004,6 +922,48 @@ export function EditProgram() {
                           setFieldTouched("budgets", true);
                         }}
                       />
+                    </div> */}
+
+                    <div className="form-group col-md-3">
+                      <label htmlFor="">
+                        Recovering From Any Injury?{" "}
+                        <span className="text-danger">*</span>
+                      </label>
+                      <div className="d-flex gap-3">
+                        <div className="d-flex align-items-center gap-2">
+                          <input
+                            type="radio"
+                            name="isInjured"
+                            id="isInjuredTrue"
+                            value={"true"}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            checked={values.isInjured == "true"}
+                          />
+                          <label htmlFor="isInjuredTrue" className="mt-2">
+                            Yes
+                          </label>
+                        </div>
+                        <div className="d-flex align-items-center gap-1">
+                          <input
+                            type="radio"
+                            name="isInjured"
+                            id="isInjuredFalse"
+                            value={"false"}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            checked={values.isInjured == "false"}
+                          />
+                          <label htmlFor="isInjuredFalse" className="mt-2">
+                            No
+                          </label>
+                        </div>
+                      </div>
+                      {errors.isInjured && touched.isInjured ? (
+                        <p className="custom-form-error text-danger">
+                          {errors.isInjured}
+                        </p>
+                      ) : null}
                     </div>
                   </div>
                 </div>
@@ -1162,8 +1122,8 @@ export function EditProgram() {
                                   const updatedInputFields = [
                                     ...uspInputFields,
                                   ];
-                                  updatedInputFields[index] =
-                                    validateTextNumber(e.target.value);
+                                  updatedInputFields[index] = e.target.value;
+                                  // validateTextNumber(e.target.value);
                                   setUspInputFields(updatedInputFields);
                                 }}
                                 placeholder="Enter USP"

@@ -69,7 +69,7 @@ export function EditBooking() {
       if (apiResponse?.status == 200) {
         let trainer = apiResponse?.body?.trainer;
         let bookingStatus = apiResponse?.body?.bookingStatus;
-        let activatioDate = apiResponse?.body?.activatioDate;
+        let activationDate = apiResponse?.body?.activationDate;
 
         let value: any = { bookingStatus };
         if (trainer) {
@@ -78,8 +78,8 @@ export function EditBooking() {
             value: trainer?._id,
           };
         }
-        if (activatioDate) {
-          value.activatioDate = moment(activatioDate).format("YYYY-MM-DD");
+        if (activationDate) {
+          value.activationDate = moment(activationDate).format("YYYY-MM-DD");
         }
         setValues(value);
       }
@@ -135,16 +135,16 @@ export function EditBooking() {
                 <div className="row">
                   <div className="form-group col-md-6">
                     <InputBox
-                      label="Activition Date"
-                      name="activatioDate"
+                      label="Activation Date"
+                      name="activationDate"
                       handleBlur={handleBlur}
                       handleChange={handleChange}
                       type="date"
                       placeholder=""
-                      value={values.activatioDate}
+                      value={values.activationDate}
                       required={false}
-                      touched={touched.activatioDate}
-                      error={errors.activatioDate}
+                      touched={touched.activationDate}
+                      error={errors.activationDate}
                     />
                   </div>
                   <div className="form-group col-md-6">

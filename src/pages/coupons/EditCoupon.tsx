@@ -23,6 +23,8 @@ import {
   COUPON_STATUS,
   COUPON_USERS,
   COUPON_DISCOUNT,
+  couponLevelOption,
+  COUPON_LEVEL,
 } from "../../constants";
 import moment from "moment";
 
@@ -57,6 +59,7 @@ export function EditCoupon() {
         couponStatus: values.couponStatus?.value,
         applyFor: values.applyFor?.value,
         discountType: values.discountType?.value,
+        couponLevel: values.couponLevel?.value,
 
         categories: values?.categories?.map((item) => {
           return item.value;
@@ -106,6 +109,12 @@ export function EditCoupon() {
             label:
               COUPON_STATUS[apiData.couponStatus as keyof typeof COUPON_STATUS],
             value: apiData.couponStatus,
+          };
+
+          apiData.couponLevel = {
+            label:
+              COUPON_LEVEL[apiData.couponLevel as keyof typeof COUPON_LEVEL],
+            value: apiData.couponLevel,
           };
 
           apiData.applyFor = {
@@ -327,102 +336,85 @@ export function EditCoupon() {
 
                   <div className="form-group col-md-6">
                     <CustomSelect
-                      label="Categories (Applicable for Coupons)"
-                      placeholder="Select categories"
-                      name="categories"
-                      required={false}
-                      options={categories}
-                      value={values.categories}
-                      error={errors.categories}
-                      touched={touched.categories}
+                      label="Coupon Level (Applicable for Coupons)"
+                      placeholder="Select coupon level"
+                      name="couponLevel"
+                      required={true}
+                      options={couponLevelOption}
+                      value={values.couponLevel}
+                      error={errors.couponLevel}
+                      touched={touched.couponLevel}
                       handleChange={(value) => {
-                        setFieldValue("categories", value);
+                        setFieldValue("couponLevel", value);
                       }}
                       handleBlur={() => {
-                        setFieldTouched("categories", true);
+                        setFieldTouched("couponLevel", true);
                       }}
-                      isMulti={true}
+                      isMulti={false}
                     />
                   </div>
 
-                  <div className="form-group col-md-6">
-                    <CustomSelect
-                      label="Programs (Applicable for Coupons)"
-                      placeholder="Select programs"
-                      name="programs"
-                      required={false}
-                      options={programs}
-                      value={values.programs}
-                      error={errors.programs}
-                      touched={touched.programs}
-                      handleChange={(value) => {
-                        setFieldValue("programs", value);
-                      }}
-                      handleBlur={() => {
-                        setFieldTouched("programs", true);
-                      }}
-                      isMulti={true}
-                    />
-                  </div>
-
-                  <div className="form-group col-md-6">
-                    <CustomSelect
-                      label="Plans (Applicable for Coupons)"
-                      placeholder="Select Plans"
-                      name="plans"
-                      required={false}
-                      options={plans}
-                      value={values.plans}
-                      error={errors.plans}
-                      touched={touched.plans}
-                      handleChange={(value) => {
-                        setFieldValue("plans", value);
-                      }}
-                      handleBlur={() => {
-                        setFieldTouched("plans", true);
-                      }}
-                      isMulti={true}
-                    />
-                  </div>
-
-                  <div className="form-group col-md-6">
-                    <label htmlFor="">Auto Apply Coupon</label>
-                    <div className="d-flex gap-3">
-                      <div className="d-flex align-items-center gap-2">
-                        <input
-                          type="radio"
-                          name="autoApply"
-                          id="true"
-                          value={"true"}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          checked={values.autoApply == "true"}
-                        />
-                        <label htmlFor="true" className="mt-2">
-                          Yes
-                        </label>
-                      </div>
-                      <div className="d-flex align-items-center gap-1">
-                        <input
-                          type="radio"
-                          name="autoApply"
-                          id="false"
-                          value={"false"}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          checked={values.autoApply == "false"}
-                        />
-                        <label htmlFor="false" className="mt-2">
-                          No
-                        </label>
-                      </div>
+                  {values.couponLevel?.value === "CATEGORY" ? (
+                    <div className="form-group col-md-6">
+                      <CustomSelect
+                        label="Categories (Applicable for Coupons)"
+                        placeholder="Select categories"
+                        name="categories"
+                        required={false}
+                        options={categories}
+                        value={values.categories}
+                        error={errors.categories}
+                        touched={touched.categories}
+                        handleChange={(value) => {
+                          setFieldValue("categories", value);
+                        }}
+                        handleBlur={() => {
+                          setFieldTouched("categories", true);
+                        }}
+                        isMulti={true}
+                      />
                     </div>
-                    {errors.autoApply && touched.autoApply ? (
-                      <p className="custom-form-error text-danger">
-                        {errors.autoApply}
-                      </p>
-                    ) : null}
-                  </div>
+                  ) : values.couponLevel?.value === "PROGRAM" ? (
+                    <div className="form-group col-md-6">
+                      <CustomSelect
+                        label="Programs (Applicable for Coupons)"
+                        placeholder="Select programs"
+                        name="programs"
+                        required={false}
+                        options={programs}
+                        value={values.programs}
+                        error={errors.programs}
+                        touched={touched.programs}
+                        handleChange={(value) => {
+                          setFieldValue("programs", value);
+                        }}
+                        handleBlur={() => {
+                          setFieldTouched("programs", true);
+                        }}
+                        isMulti={true}
+                      />
+                    </div>
+                  ) : values.couponLevel?.value === "PLAN" ? (
+                    <div className="form-group col-md-6">
+                      <CustomSelect
+                        label="Plans (Applicable for Coupons)"
+                        placeholder="Select Plans"
+                        name="plans"
+                        required={false}
+                        options={plans}
+                        value={values.plans}
+                        error={errors.plans}
+                        touched={touched.plans}
+                        handleChange={(value) => {
+                          setFieldValue("plans", value);
+                        }}
+                        handleBlur={() => {
+                          setFieldTouched("plans", true);
+                        }}
+                        isMulti={true}
+                      />
+                    </div>
+                  ) : null}
 
                   <div className="form-group col-md-12">
                     <TextareaBox
@@ -505,6 +497,45 @@ export function EditCoupon() {
                       touched={touched.expiryDate}
                       error={errors.expiryDate}
                     />
+                  </div>
+
+                  <div className="form-group col-md-6">
+                    <label htmlFor="">Auto Apply Coupon</label>
+                    <div className="d-flex gap-3">
+                      <div className="d-flex align-items-center gap-2">
+                        <input
+                          type="radio"
+                          name="autoApply"
+                          id="true"
+                          value={"true"}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          checked={values.autoApply == "true"}
+                        />
+                        <label htmlFor="true" className="mt-2">
+                          Yes
+                        </label>
+                      </div>
+                      <div className="d-flex align-items-center gap-1">
+                        <input
+                          type="radio"
+                          name="autoApply"
+                          id="false"
+                          value={"false"}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          checked={values.autoApply == "false"}
+                        />
+                        <label htmlFor="false" className="mt-2">
+                          No
+                        </label>
+                      </div>
+                    </div>
+                    {errors.autoApply && touched.autoApply ? (
+                      <p className="custom-form-error text-danger">
+                        {errors.autoApply}
+                      </p>
+                    ) : null}
                   </div>
 
                   <div className="form-group col-md-6">

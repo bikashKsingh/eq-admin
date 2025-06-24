@@ -6,6 +6,7 @@ export const categorySchema = Yup.object({
   image: Yup.string().required().label("Image"),
   shortDescription: Yup.string().label("Short Description"),
   video: Yup.string().label("Video"),
+  displayOrder: Yup.number().required().label("Display Order"),
   metaTitle: Yup.string().label("Meta Title"),
   metaDescription: Yup.string().label("Meta Description"),
 });
@@ -16,6 +17,7 @@ export const categoryInitialValues: CategoryValues = {
   image: "",
   shortDescription: "",
   video: "",
+  displayOrder: "0",
   metaTitle: "",
   metaDescription: "",
   metaKeywords: "",
@@ -27,6 +29,7 @@ export interface CategoryValues {
   image: string;
   shortDescription: string;
   video: string;
+  displayOrder: string;
   metaTitle: string;
   metaDescription: string;
   metaKeywords: string;

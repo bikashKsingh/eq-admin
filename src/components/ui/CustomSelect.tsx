@@ -1,6 +1,7 @@
 import Select from "react-select";
 
 export function CustomSelect(props: PropsType) {
+  console.log(props.inputPadding);
   return (
     <>
       {props.label ? (
@@ -21,8 +22,7 @@ export function CustomSelect(props: PropsType) {
           }),
           input: (styles) => ({
             ...styles,
-
-            padding: "10px 0",
+            padding: props.inputPadding ? props.inputPadding : "10px 0",
             fontSize: "13px",
           }),
           option: (styles) => ({
@@ -70,4 +70,5 @@ type PropsType = {
   handleBlur: (value: boolean) => void;
   options: Option[];
   isMulti?: boolean;
+  inputPadding?: string;
 };
