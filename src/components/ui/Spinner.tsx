@@ -1,11 +1,13 @@
 export function Spinner(props: PropsType) {
   return (
-    <span
-      className="spinner-border spinner-border-sm"
-      role="status"
-      aria-hidden="true"
-    ></span>
+    <div className="d-flex align-items-center gap-1 text-muted">
+      <div
+        className="spinner-border spinner-border-sm"
+        aria-hidden="true"
+      ></div>
+      <span role="status">{props.text}</span>
+    </div>
   );
 }
 
-type PropsType = {};
+type PropsType = { text: String };

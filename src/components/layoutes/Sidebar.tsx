@@ -8,7 +8,7 @@ export function Sidebar() {
           <Link className="nav-link active" to="/">
             <i className="ti-shield menu-icon"></i>
             {/* <TfiDashboard className="menu-icon" /> */}
-            <span className="menu-title">DASHBOARD</span>
+            <span className="menu-title">Dashboard</span>
           </Link>
         </li>
         <li className="nav-item">
