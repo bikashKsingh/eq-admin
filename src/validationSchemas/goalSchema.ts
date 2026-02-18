@@ -2,7 +2,7 @@ import * as Yup from "yup";
 
 export const goalSchema = Yup.object({
   title: Yup.string().required().label("Title"),
-  image: Yup.string().required().label("Image"),
+  image: Yup.string().optional().label("Image"),
   status: Yup.string().label("Status"),
   displayOrder: Yup.string().label("Display Order"),
 });

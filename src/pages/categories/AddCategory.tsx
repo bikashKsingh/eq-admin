@@ -43,7 +43,7 @@ export function AddCategory() {
   } = useFormik({
     onSubmit: async function (
       values: CategoryValues,
-      helpers: FormikHelpers<CategoryValues>
+      helpers: FormikHelpers<CategoryValues>,
     ) {
       setLoading(true);
 
@@ -137,7 +137,7 @@ export function AddCategory() {
   // handleDeleteFile
   async function handleDeleteFile(
     event: React.MouseEvent<HTMLButtonElement>,
-    fileName: string
+    fileName: string,
   ) {
     event.preventDefault();
 
@@ -153,7 +153,7 @@ export function AddCategory() {
       }
 
       const fileInput = document.getElementById(
-        `imageFile`
+        `imageFile`,
       ) as HTMLInputElement;
       if (fileInput) {
         fileInput.value = ""; // Clear the input field
@@ -244,7 +244,8 @@ export function AddCategory() {
 
                   <div className="form-group col-md-7">
                     <label htmlFor={"imageFile"}>
-                      Category Image <span className="text-danger"> *</span>
+                      Category Image
+                      {/* <span className="text-danger"> *</span> */}
                     </label>
                     <div className="d-flex gap-2">
                       <input
@@ -273,7 +274,7 @@ export function AddCategory() {
                           onClick={(evt) => {
                             handleDeleteFile(
                               evt,
-                              getFileNameFromUrl(values.image)
+                              getFileNameFromUrl(values.image),
                             );
                           }}
                         >

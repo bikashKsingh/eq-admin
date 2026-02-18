@@ -3,7 +3,7 @@ import * as Yup from "yup";
 export const categorySchema = Yup.object({
   name: Yup.string().required().label("Name"),
   slug: Yup.string().required().label("Slug"),
-  image: Yup.string().required().label("Image"),
+  image: Yup.string().optional().label("Image"),
   shortDescription: Yup.string().label("Short Description"),
   video: Yup.string().label("Video"),
   displayOrder: Yup.number().required().label("Display Order"),

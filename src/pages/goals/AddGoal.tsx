@@ -36,7 +36,7 @@ export function AddGoal() {
   } = useFormik({
     onSubmit: async function (
       values: GoalValues,
-      helpers: FormikHelpers<GoalValues>
+      helpers: FormikHelpers<GoalValues>,
     ) {
       setLoading(true);
 
@@ -109,7 +109,7 @@ export function AddGoal() {
   // handleDeleteFile
   async function handleDeleteFile(
     event: React.MouseEvent<HTMLButtonElement>,
-    fileName: string
+    fileName: string,
   ) {
     event.preventDefault();
 
@@ -125,7 +125,7 @@ export function AddGoal() {
       }
 
       const fileInput = document.getElementById(
-        `imageFile`
+        `imageFile`,
       ) as HTMLInputElement;
       if (fileInput) {
         fileInput.value = ""; // Clear the input field
@@ -246,7 +246,8 @@ export function AddGoal() {
 
                   <div className="form-group col-md-6">
                     <label htmlFor={"imageFile"}>
-                      Goal Icon <span className="text-danger"> *</span>
+                      Goal Icon
+                      {/* <span className="text-danger"> *</span> */}
                     </label>
                     <div className="d-flex gap-2">
                       <input
@@ -275,7 +276,7 @@ export function AddGoal() {
                           onClick={(evt) => {
                             handleDeleteFile(
                               evt,
-                              getFileNameFromUrl(values.image)
+                              getFileNameFromUrl(values.image),
                             );
                           }}
                         >
