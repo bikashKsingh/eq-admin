@@ -182,7 +182,7 @@ export function InquiryList() {
                 <span className="fas fa-eye" aria-hidden="true"></span>
               </Link>
 
-              <button
+              {/* <button
                 type="button"
                 className="btn p-2 bg-light"
                 data-toggle="modal"
@@ -195,7 +195,7 @@ export function InquiryList() {
                   className="fas fa-trash-alt text-danger"
                   aria-hidden="true"
                 ></span>
-              </button>
+              </button> */}
             </div>
           );
         },

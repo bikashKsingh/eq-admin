@@ -58,7 +58,7 @@ export function UserList() {
 
       getData();
     },
-    [pagination.page, pagination.limit, searchQuery, needReload, status]
+    [pagination.page, pagination.limit, searchQuery, needReload, status],
   );
 
   type Record = {
@@ -167,7 +167,7 @@ export function UserList() {
                 ></span>
               </Link>
 
-              <button
+              {/* <button
                 type="button"
                 className="btn p-2 bg-light"
                 data-toggle="modal"
@@ -180,13 +180,13 @@ export function UserList() {
                   className="fas fa-trash-alt text-danger"
                   aria-hidden="true"
                 ></span>
-              </button>
+              </button> */}
             </div>
           );
         },
       },
     ],
-    []
+    [],
   );
 
   const data = React.useMemo(() => {
@@ -200,7 +200,7 @@ export function UserList() {
         createdAt: data.createdAt,
         status: data.status,
         validity: `${moment(data.startDate).format("DD-MMM-YYYY")} to ${moment(
-          data.expiryDate
+          data.expiryDate,
         ).format("DD-MMM-YYYY")}`,
         id: data._id,
       };
@@ -213,7 +213,7 @@ export function UserList() {
       useFilters,
       useSortBy,
       usePagination,
-      useRowSelect
+      useRowSelect,
     ) as TableInstanceWithRowSelect<Record>;
 
   // handleDeleteData
