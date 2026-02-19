@@ -15,6 +15,7 @@ export const programSchema = Yup.object({
   defaultVideo: Yup.string().url().label("Default Image"),
 
   images: Yup.array().nullable().label("Images"),
+  shortDescriptions: Yup.string().required().label("Short Descriptions"),
   rescheduleAndCancelPolicy: Yup.string()
     .required()
     .label("Rescheduling and Cancellation Policy"),
@@ -55,6 +56,7 @@ export const programInitialValues: ProgramValues = {
   defaultImage: "",
   defaultVideo: "",
   images: null,
+  shortDescriptions: "",
   rescheduleAndCancelPolicy: "",
   highlights: "",
   requirements: null,
@@ -93,6 +95,7 @@ export interface ProgramValues {
   defaultImage: string;
   defaultVideo: string;
   images: string[] | null;
+  shortDescriptions: string;
   rescheduleAndCancelPolicy: string;
   highlights: string;
   requirements: any[] | null;

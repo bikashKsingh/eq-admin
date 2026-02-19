@@ -853,6 +853,30 @@ export function AddProgram() {
                   <div className="col-md-12">
                     <h5 className="mb-2">Program Description</h5>
                   </div>
+
+                  <div className="col-md-12 form-group">
+                    <label htmlFor={"shortDescriptions"} className="mb-2">
+                      Short Descriptions
+                    </label>
+                    <CKEditor
+                      editor={ClassicEditor as any}
+                      data=""
+                      onChange={(event, editor) => {
+                        const data = editor.getData();
+                        setFieldValue("shortDescriptions", data);
+                      }}
+                      onBlur={(event, editor) => {
+                        setFieldTouched("shortDescriptions", true);
+                      }}
+                      onFocus={(event, editor) => {}}
+                      id={"shortDescriptions"}
+                    />
+                    {errors.shortDescriptions && touched.shortDescriptions ? (
+                      <p className="custom-form-error text-danger">
+                        {errors.shortDescriptions}
+                      </p>
+                    ) : null}
+                  </div>
                   <div className="col-md-12 form-group">
                     <label
                       htmlFor={"rescheduleAndCancelPolicy"}

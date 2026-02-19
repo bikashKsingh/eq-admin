@@ -40,7 +40,7 @@ export function AddProgramPlan() {
   } = useFormik({
     onSubmit: async function (
       values: ProgramPlanValues,
-      helpers: FormikHelpers<ProgramPlanValues>
+      helpers: FormikHelpers<ProgramPlanValues>,
     ) {
       setLoading(true);
 
@@ -81,7 +81,7 @@ export function AddProgramPlan() {
       }
       if (id) getData(id);
     },
-    [id]
+    [id],
   );
 
   // get plans
@@ -490,7 +490,7 @@ export function AddProgramPlan() {
                       Features
                     </label>
                     <CKEditor
-                      editor={ClassicEditor}
+                      editor={ClassicEditor as any}
                       data=""
                       onChange={(event, editor) => {
                         const data = editor.getData();

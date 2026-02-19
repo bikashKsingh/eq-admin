@@ -83,7 +83,7 @@ export function ProgramPlanList() {
       needReload,
       status,
       selectedProgram,
-    ]
+    ],
   );
 
   type Record = {
@@ -209,7 +209,7 @@ export function ProgramPlanList() {
         },
       },
     ],
-    []
+    [],
   );
 
   const data = React.useMemo(() => {
@@ -255,7 +255,7 @@ export function ProgramPlanList() {
       useFilters,
       useSortBy,
       usePagination,
-      useRowSelect
+      useRowSelect,
 
       // Use a custom hook to add selection functionality
       // (hooks) => {
