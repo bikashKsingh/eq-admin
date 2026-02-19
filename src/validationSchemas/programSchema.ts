@@ -15,12 +15,18 @@ export const programSchema = Yup.object({
   defaultVideo: Yup.string().url().label("Default Image"),
 
   images: Yup.array().nullable().label("Images"),
-  descriptions: Yup.string().required().label("Descriptions"),
+  rescheduleAndCancelPolicy: Yup.string()
+    .required()
+    .label("Rescheduling and Cancellation Policy"),
   highlights: Yup.string().optional().label("Highlights"),
   requirements: Yup.array().optional().label("Requirements"),
 
-  benefits: Yup.string().optional().label("Benefits"),
-  howItWorks: Yup.string().optional().label("How It Works"),
+  inclusionsAndbenefits: Yup.string()
+    .optional()
+    .label("Inclusions and Benefits"),
+  programValidityPolicy: Yup.string()
+    .optional()
+    .label("Program Validity Policy"),
 
   faqs: Yup.array().nullable().label("Faqs"),
 
@@ -49,12 +55,12 @@ export const programInitialValues: ProgramValues = {
   defaultImage: "",
   defaultVideo: "",
   images: null,
-  descriptions: "",
+  rescheduleAndCancelPolicy: "",
   highlights: "",
   requirements: null,
   faqs: null,
-  benefits: "",
-  howItWorks: "",
+  inclusionsAndbenefits: "",
+  programValidityPolicy: "",
   metaTitle: "",
   metaDescription: "",
   metaKeywords: "",
@@ -87,12 +93,12 @@ export interface ProgramValues {
   defaultImage: string;
   defaultVideo: string;
   images: string[] | null;
-  descriptions: string;
+  rescheduleAndCancelPolicy: string;
   highlights: string;
   requirements: any[] | null;
   faqs: any[] | null;
-  benefits: string;
-  howItWorks: string;
+  inclusionsAndbenefits: string;
+  programValidityPolicy: string;
 
   //   profilePhoto: FileType | null;
   metaTitle: string;

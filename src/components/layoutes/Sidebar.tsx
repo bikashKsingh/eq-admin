@@ -304,6 +304,13 @@ export function Sidebar() {
         </li>
 
         <li className="nav-item">
+          <Link className="nav-link" to="/inquiries">
+            <i className="ti-package menu-icon"></i>
+            <span className="menu-title">Inquiries</span>
+          </Link>
+        </li>
+
+        <li className="nav-item">
           <a className="nav-link" href="pages/charts/chartjs.html">
             <i className="ti-power-off menu-icon"></i>
             <span className="menu-title">Logout</span>

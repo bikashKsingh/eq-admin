@@ -123,6 +123,15 @@ export function Router() {
           element={<Pages.TrainerInterestList />}
         />
 
+        {/* Inquiries */}
+        <Route path="/inquiries/add" element={<Pages.AddInquiry />} />
+        <Route path="/inquiries/edit/:id" element={<Pages.EditInquiry />} />
+        <Route
+          path="/inquiries/details/:id"
+          element={<Pages.InquiryDetails />}
+        />
+        <Route path="/inquiries" element={<Pages.InquiryList />} />
+
         {/* Trainer Level */}
         <Route path="/trainerLevels/add" element={<Pages.AddTrainerLevel />} />
         <Route

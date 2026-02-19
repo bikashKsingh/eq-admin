@@ -61,7 +61,7 @@ export function EditProgram() {
   } = useFormik({
     onSubmit: async function (
       values: ProgramValues,
-      helpers: FormikHelpers<ProgramValues>
+      helpers: FormikHelpers<ProgramValues>,
     ) {
       setLoading(true);
 
@@ -110,7 +110,7 @@ export function EditProgram() {
       }
       if (values.yogaExperiences?.length) {
         newValue.yogaExperiences = values.yogaExperiences.map(
-          (item: any) => item.value
+          (item: any) => item.value,
         );
       }
       if (values.timeSlots?.length) {
@@ -159,7 +159,7 @@ export function EditProgram() {
   // get programRequirements
   useEffect(function () {
     async function getData() {
-      const apiResponse = await get("/programRequirements", true);
+      const apiResponse = await get("/programRequirements?limit=0", true);
       if (apiResponse?.status == 200) {
         const modifiedValue = apiResponse?.body?.map((value: any) => {
           return {
@@ -177,7 +177,7 @@ export function EditProgram() {
   // get category
   useEffect(function () {
     async function getData() {
-      const apiResponse = await get("/categories", true);
+      const apiResponse = await get("/categories?limit=0", true);
       if (apiResponse?.status == 200) {
         const modifiedValue = apiResponse?.body?.map((value: any) => {
           return {
@@ -195,7 +195,7 @@ export function EditProgram() {
   // get sub category
   useEffect(function () {
     async function getData() {
-      const apiResponse = await get("/subCategories", true);
+      const apiResponse = await get("/subCategories?limit=0", true);
       if (apiResponse?.status == 200) {
         const modifiedValue = apiResponse?.body?.map((value: any) => {
           return {
@@ -325,13 +325,13 @@ export function EditProgram() {
       }
       if (id) getData(id);
     },
-    [id]
+    [id],
   );
 
   // get goals
   useEffect(function () {
     async function getData() {
-      const apiResponse = await get("/goals?displayOrder=ASC", true);
+      const apiResponse = await get("/goals?displayOrder=ASC&limit=0", true);
       if (apiResponse?.status == 200) {
         const modifiedValue = apiResponse?.body?.map((value: any) => {
           return {
@@ -349,7 +349,10 @@ export function EditProgram() {
   // get ageRanges
   useEffect(function () {
     async function getData() {
-      const apiResponse = await get("/ageRanges?displayOrder=ASC", true);
+      const apiResponse = await get(
+        "/ageRanges?displayOrder=ASC&limit=0",
+        true,
+      );
       if (apiResponse?.status == 200) {
         const modifiedValue = apiResponse?.body?.map((value: any) => {
           return {
@@ -367,7 +370,10 @@ export function EditProgram() {
   // get yogaExperiences
   useEffect(function () {
     async function getData() {
-      const apiResponse = await get("/yogaExperiences?displayOrder=ASC", true);
+      const apiResponse = await get(
+        "/yogaExperiences?displayOrder=ASC&limit=0",
+        true,
+      );
       if (apiResponse?.status == 200) {
         const modifiedValue = apiResponse?.body?.map((value: any) => {
           return {
@@ -385,7 +391,10 @@ export function EditProgram() {
   // get timeSlots
   useEffect(function () {
     async function getData() {
-      const apiResponse = await get("/timeSlots?displayOrder=ASC", true);
+      const apiResponse = await get(
+        "/timeSlots?displayOrder=ASC&limit=0",
+        true,
+      );
       if (apiResponse?.status == 200) {
         const modifiedValue = apiResponse?.body?.map((value: any) => {
           return {
@@ -403,7 +412,7 @@ export function EditProgram() {
   // get budgets
   useEffect(function () {
     async function getData() {
-      const apiResponse = await get("/budgets?displayOrder=ASC", true);
+      const apiResponse = await get("/budgets?displayOrder=ASC&limit=0", true);
 
       if (apiResponse?.status == 200) {
         const modifiedValue = apiResponse?.body?.map((value: any) => {
@@ -420,7 +429,7 @@ export function EditProgram() {
 
   // handleUploadProfilePic
   async function handleUploadProfilePic(
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) {
     const mimeTypes = ["image/png", "image/jpg", "image/jpeg"];
 
@@ -472,7 +481,7 @@ export function EditProgram() {
   // handleDeleteFile
   async function handleDeleteProfilePic(
     event: React.MouseEvent<HTMLButtonElement>,
-    fileName: string
+    fileName: string,
   ) {
     event.preventDefault();
 
@@ -488,7 +497,7 @@ export function EditProgram() {
       }
 
       const fileInput = document.getElementById(
-        `defaultImageFile`
+        `defaultImageFile`,
       ) as HTMLInputElement;
       if (fileInput) {
         fileInput.value = ""; // Clear the input field
@@ -714,7 +723,7 @@ export function EditProgram() {
 
                     <div className="form-group col-md-3">
                       <label htmlFor="">
-                        Is Trail Program <span className="text-danger">*</span>
+                        Is Trial Program <span className="text-danger">*</span>
                       </label>
                       <div className="d-flex gap-3">
                         <div className="d-flex align-items-center gap-2">
@@ -977,25 +986,29 @@ export function EditProgram() {
                       <h5 className="mb-2">Program Description</h5>
                     </div>
                     <div className="col-md-12 form-group">
-                      <label htmlFor={"descriptions"} className="mb-2">
-                        About the Program
+                      <label
+                        htmlFor={"rescheduleAndCancelPolicy"}
+                        className="mb-2"
+                      >
+                        Rescheduling and Cancellation Policy
                       </label>
                       <CKEditor
-                        editor={ClassicEditor}
-                        data={values.descriptions}
+                        editor={ClassicEditor as any}
+                        data={values.rescheduleAndCancelPolicy || ""}
                         onChange={(event, editor) => {
                           const data = editor.getData();
-                          setFieldValue("descriptions", data);
+                          setFieldValue("rescheduleAndCancelPolicy", data);
                         }}
                         onBlur={(event, editor) => {
-                          setFieldTouched("descriptions", true);
+                          setFieldTouched("rescheduleAndCancelPolicy", true);
                         }}
                         onFocus={(event, editor) => {}}
-                        id={"descriptions"}
+                        id={"rescheduleAndCancelPolicy"}
                       />
-                      {errors.descriptions && touched.descriptions ? (
+                      {errors.rescheduleAndCancelPolicy &&
+                      touched.rescheduleAndCancelPolicy ? (
                         <p className="custom-form-error text-danger">
-                          {errors.descriptions}
+                          {errors.rescheduleAndCancelPolicy}
                         </p>
                       ) : null}
                     </div>
@@ -1005,8 +1018,8 @@ export function EditProgram() {
                         Highlights
                       </label>
                       <CKEditor
-                        editor={ClassicEditor}
-                        data={values.highlights}
+                        editor={ClassicEditor as any}
+                        data={values.highlights || ""}
                         onChange={(event, editor) => {
                           const data = editor.getData();
                           setFieldValue("highlights", data);
@@ -1025,49 +1038,51 @@ export function EditProgram() {
                     </div>
 
                     <div className="col-md-12 form-group">
-                      <label htmlFor={"benefits"} className="mb-2">
-                        What you will get in this Program
+                      <label htmlFor={"inclusionsAndbenefits"} className="mb-2">
+                        Inclusions and Benefits
                       </label>
                       <CKEditor
-                        editor={ClassicEditor}
-                        data={values.benefits}
+                        editor={ClassicEditor as any}
+                        data={values.inclusionsAndbenefits || ""}
                         onChange={(event, editor) => {
                           const data = editor.getData();
-                          setFieldValue("benefits", data);
+                          setFieldValue("inclusionsAndbenefits", data);
                         }}
                         onBlur={(event, editor) => {
-                          setFieldTouched("benefits", true);
+                          setFieldTouched("inclusionsAndbenefits", true);
                         }}
                         // onFocus={(event, editor) => {}}
-                        id={"benefits"}
+                        id={"inclusionsAndbenefits"}
                       />
-                      {errors.benefits && touched.benefits ? (
+                      {errors.inclusionsAndbenefits &&
+                      touched.inclusionsAndbenefits ? (
                         <p className="custom-form-error text-danger">
-                          {errors.benefits}
+                          {errors.inclusionsAndbenefits}
                         </p>
                       ) : null}
                     </div>
 
                     <div className="col-md-12 form-group">
-                      <label htmlFor={"descriptions"} className="mb-2">
-                        How it Works
+                      <label htmlFor={"programValidityPolicy"} className="mb-2">
+                        Program Validity Policy
                       </label>
                       <CKEditor
-                        editor={ClassicEditor}
-                        data={values.howItWorks}
+                        editor={ClassicEditor as any}
+                        data={values.programValidityPolicy || ""}
                         onChange={(event, editor) => {
                           const data = editor.getData();
-                          setFieldValue("howItWorks", data);
+                          setFieldValue("programValidityPolicy", data);
                         }}
                         onBlur={(event, editor) => {
-                          setFieldTouched("howItWorks", true);
+                          setFieldTouched("programValidityPolicy", true);
                         }}
                         // onFocus={(event, editor) => {}}
-                        id={"howItWorks"}
+                        id={"programValidityPolicy"}
                       />
-                      {errors.howItWorks && touched.howItWorks ? (
+                      {errors.programValidityPolicy &&
+                      touched.programValidityPolicy ? (
                         <p className="custom-form-error text-danger">
-                          {errors.howItWorks}
+                          {errors.programValidityPolicy}
                         </p>
                       ) : null}
                     </div>
@@ -1203,7 +1218,7 @@ export function EditProgram() {
                               <div className="mb-1 form-group col-md-12">
                                 <label htmlFor={""}>Answer</label>
                                 <CKEditor
-                                  editor={ClassicEditor}
+                                  editor={ClassicEditor as any}
                                   data={feild.answer}
                                   onChange={(event, editor) => {
                                     const data = editor.getData();
@@ -1315,7 +1330,7 @@ export function EditProgram() {
                             onClick={(evt) => {
                               handleDeleteProfilePic(
                                 evt,
-                                getFileNameFromUrl(values.defaultImage)
+                                getFileNameFromUrl(values.defaultImage),
                               );
                             }}
                           >

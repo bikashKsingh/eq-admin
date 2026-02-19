@@ -1,7 +1,6 @@
 import Select from "react-select";
 
 export function CustomSelect(props: PropsType) {
-  console.log(props.inputPadding);
   return (
     <>
       {props.label ? (

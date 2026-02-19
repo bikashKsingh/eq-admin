@@ -56,7 +56,7 @@ export function AddProgram() {
   } = useFormik({
     onSubmit: async function (
       values: ProgramValues,
-      helpers: FormikHelpers<ProgramValues>
+      helpers: FormikHelpers<ProgramValues>,
     ) {
       setLoading(true);
 
@@ -102,7 +102,7 @@ export function AddProgram() {
       }
       if (values.yogaExperiences?.length) {
         newValue.yogaExperiences = values.yogaExperiences.map(
-          (item: any) => item.value
+          (item: any) => item.value,
         );
       }
       if (values.timeSlots?.length) {
@@ -298,7 +298,7 @@ export function AddProgram() {
 
   // handleUploadProfilePic
   async function handleUploadProfilePic(
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) {
     const mimeTypes = ["image/png", "image/jpg", "image/jpeg"];
 
@@ -350,7 +350,7 @@ export function AddProgram() {
   // handleDeleteFile
   async function handleDeleteProfilePic(
     event: React.MouseEvent<HTMLButtonElement>,
-    fileName: string
+    fileName: string,
   ) {
     event.preventDefault();
 
@@ -366,7 +366,7 @@ export function AddProgram() {
       }
 
       const fileInput = document.getElementById(
-        `defaultImageFile`
+        `defaultImageFile`,
       ) as HTMLInputElement;
       if (fileInput) {
         fileInput.value = ""; // Clear the input field
@@ -593,7 +593,7 @@ export function AddProgram() {
 
                   <div className="form-group col-md-3">
                     <label htmlFor="">
-                      Is Trail Program <span className="text-danger">*</span>
+                      Is Trial Program <span className="text-danger">*</span>
                     </label>
                     <div className="d-flex gap-3">
                       <div className="d-flex align-items-center gap-2">
@@ -981,7 +981,7 @@ export function AddProgram() {
                               onChange={(e) => {
                                 const updatedInputFields = [...uspInputFields];
                                 updatedInputFields[index] = validateTextNumber(
-                                  e.target.value
+                                  e.target.value,
                                 );
                                 setUspInputFields(updatedInputFields);
                               }}
@@ -1166,7 +1166,7 @@ export function AddProgram() {
                           onClick={(evt) => {
                             handleDeleteProfilePic(
                               evt,
-                              getFileNameFromUrl(values.defaultImage)
+                              getFileNameFromUrl(values.defaultImage),
                             );
                           }}
                         >

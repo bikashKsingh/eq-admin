@@ -63,6 +63,12 @@ export * from "./trainerLevel/AddTrainerLevel";
 export * from "./trainerLevel/TrainerLevelList";
 export * from "./trainerLevel/EditTrainerLevel";
 
+// Inquiries
+export * from "./inquiries/AddInquiry";
+export * from "./inquiries/InquiryList";
+export * from "./inquiries/EditInquiry";
+export * from "./inquiries/InquiryDetails";
+
 // Trainers
 export * from "./trainers/AddTrainer";
 export * from "./trainers/TrainerList";

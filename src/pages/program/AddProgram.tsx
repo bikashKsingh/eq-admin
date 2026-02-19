@@ -56,7 +56,7 @@ export function AddProgram() {
   } = useFormik({
     onSubmit: async function (
       values: ProgramValues,
-      helpers: FormikHelpers<ProgramValues>
+      helpers: FormikHelpers<ProgramValues>,
     ) {
       setLoading(true);
 
@@ -102,7 +102,7 @@ export function AddProgram() {
       }
       if (values.yogaExperiences?.length) {
         newValue.yogaExperiences = values.yogaExperiences.map(
-          (item: any) => item.value
+          (item: any) => item.value,
         );
       }
       if (values.timeSlots?.length) {
@@ -299,7 +299,7 @@ export function AddProgram() {
 
   // handleUploadProfilePic
   async function handleUploadProfilePic(
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) {
     const mimeTypes = ["image/png", "image/jpg", "image/jpeg"];
 
@@ -351,7 +351,7 @@ export function AddProgram() {
   // handleDeleteFile
   async function handleDeleteProfilePic(
     event: React.MouseEvent<HTMLButtonElement>,
-    fileName: string
+    fileName: string,
   ) {
     event.preventDefault();
 
@@ -367,7 +367,7 @@ export function AddProgram() {
       }
 
       const fileInput = document.getElementById(
-        `defaultImageFile`
+        `defaultImageFile`,
       ) as HTMLInputElement;
       if (fileInput) {
         fileInput.value = ""; // Clear the input field
@@ -591,7 +591,7 @@ export function AddProgram() {
 
                   <div className="form-group col-md-3">
                     <label htmlFor="">
-                      Is Trail Program <span className="text-danger">*</span>
+                      Is Trial Program <span className="text-danger">*</span>
                     </label>
                     <div className="d-flex gap-3">
                       <div className="d-flex align-items-center gap-2">
@@ -854,25 +854,29 @@ export function AddProgram() {
                     <h5 className="mb-2">Program Description</h5>
                   </div>
                   <div className="col-md-12 form-group">
-                    <label htmlFor={"descriptions"} className="mb-2">
-                      About the Program
+                    <label
+                      htmlFor={"rescheduleAndCancelPolicy"}
+                      className="mb-2"
+                    >
+                      Rescheduling and Cancellation Policy
                     </label>
                     <CKEditor
-                      editor={ClassicEditor}
+                      editor={ClassicEditor as any}
                       data=""
                       onChange={(event, editor) => {
                         const data = editor.getData();
-                        setFieldValue("descriptions", data);
+                        setFieldValue("rescheduleAndCancelPolicy", data);
                       }}
                       onBlur={(event, editor) => {
-                        setFieldTouched("descriptions", true);
+                        setFieldTouched("rescheduleAndCancelPolicy", true);
                       }}
                       onFocus={(event, editor) => {}}
-                      id={"descriptions"}
+                      id={"rescheduleAndCancelPolicy"}
                     />
-                    {errors.descriptions && touched.descriptions ? (
+                    {errors.rescheduleAndCancelPolicy &&
+                    touched.rescheduleAndCancelPolicy ? (
                       <p className="custom-form-error text-danger">
-                        {errors.descriptions}
+                        {errors.rescheduleAndCancelPolicy}
                       </p>
                     ) : null}
                   </div>
@@ -882,7 +886,7 @@ export function AddProgram() {
                       Highlights
                     </label>
                     <CKEditor
-                      editor={ClassicEditor}
+                      editor={ClassicEditor as any}
                       data=""
                       onChange={(event, editor) => {
                         const data = editor.getData();
@@ -902,49 +906,51 @@ export function AddProgram() {
                   </div>
 
                   <div className="col-md-12 form-group">
-                    <label htmlFor={"benefits"} className="mb-2">
-                      What you will get in this Program
+                    <label htmlFor={"inclusionsAndbenefits"} className="mb-2">
+                      Inclusions and Benefits
                     </label>
                     <CKEditor
-                      editor={ClassicEditor}
+                      editor={ClassicEditor as any}
                       data=""
                       onChange={(event, editor) => {
                         const data = editor.getData();
-                        setFieldValue("benefits", data);
+                        setFieldValue("inclusionsAndbenefits", data);
                       }}
                       onBlur={(event, editor) => {
-                        setFieldTouched("benefits", true);
+                        setFieldTouched("inclusionsAndbenefits", true);
                       }}
                       // onFocus={(event, editor) => {}}
-                      id={"benefits"}
+                      id={"inclusionsAndbenefits"}
                     />
-                    {errors.benefits && touched.benefits ? (
+                    {errors.inclusionsAndbenefits &&
+                    touched.inclusionsAndbenefits ? (
                       <p className="custom-form-error text-danger">
-                        {errors.benefits}
+                        {errors.inclusionsAndbenefits}
                       </p>
                     ) : null}
                   </div>
 
                   <div className="col-md-12 form-group">
-                    <label htmlFor={"descriptions"} className="mb-2">
-                      How it Works
+                    <label htmlFor={"programValidityPolicy"} className="mb-2">
+                      Program Validity Policy
                     </label>
                     <CKEditor
-                      editor={ClassicEditor}
+                      editor={ClassicEditor as any}
                       data=""
                       onChange={(event, editor) => {
                         const data = editor.getData();
-                        setFieldValue("howItWorks", data);
+                        setFieldValue("programValidityPolicy", data);
                       }}
                       onBlur={(event, editor) => {
-                        setFieldTouched("howItWorks", true);
+                        setFieldTouched("programValidityPolicy", true);
                       }}
                       // onFocus={(event, editor) => {}}
-                      id={"howItWorks"}
+                      id={"programValidityPolicy"}
                     />
-                    {errors.howItWorks && touched.howItWorks ? (
+                    {errors.programValidityPolicy &&
+                    touched.programValidityPolicy ? (
                       <p className="custom-form-error text-danger">
-                        {errors.howItWorks}
+                        {errors.programValidityPolicy}
                       </p>
                     ) : null}
                   </div>
@@ -1073,7 +1079,7 @@ export function AddProgram() {
                         <div className="mb-1 form-group col-md-12">
                           <label htmlFor={""}>Answer</label>
                           <CKEditor
-                            editor={ClassicEditor}
+                            editor={ClassicEditor as any}
                             data={feild.answer}
                             onChange={(event, editor) => {
                               const data = editor.getData();
@@ -1182,7 +1188,7 @@ export function AddProgram() {
                           onClick={(evt) => {
                             handleDeleteProfilePic(
                               evt,
-                              getFileNameFromUrl(values.defaultImage)
+                              getFileNameFromUrl(values.defaultImage),
                             );
                           }}
                         >
