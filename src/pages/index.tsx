@@ -48,6 +48,11 @@ export * from "./coupons/AddCoupon";
 export * from "./coupons/CouponList";
 export * from "./coupons/EditCoupon";
 
+// Faqs
+export * from "./faqs/AddFaqs";
+export * from "./faqs/FaqsList";
+export * from "./faqs/EditFaqs";
+
 // Trainer Speciality
 export * from "./trainerSpeciality/AddTrainerSpeciality";
 export * from "./trainerSpeciality/TrainerSpecialityList";

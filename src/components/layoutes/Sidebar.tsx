@@ -296,6 +296,30 @@ export function Sidebar() {
           </div>
         </li>
 
+        {/* Faqs */}
+        <li className="nav-item">
+          <a
+            className="nav-link"
+            data-bs-toggle="collapse"
+            href="#faqs"
+            aria-expanded="false"
+            aria-controls="faqs"
+          >
+            <i className="ti-files menu-icon"></i>
+            <span className="menu-title">Faqs</span>
+            <i className="menu-arrow"></i>
+          </a>
+          <div className="collapse" id="faqs">
+            <ul className="nav flex-column sub-menu">
+              <li className="nav-item">
+                <Link className="nav-link" to="/faqs">
+                  Faqs
+                </Link>
+              </li>
+            </ul>
+          </div>
+        </li>
+
         <li className="nav-item">
           <Link className="nav-link" to="/bookings">
             <i className="ti-package menu-icon"></i>
