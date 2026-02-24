@@ -20,7 +20,6 @@ export const programSchema = Yup.object({
     .required()
     .label("Rescheduling and Cancellation Policy"),
   highlights: Yup.string().optional().label("Highlights"),
-  requirements: Yup.array().optional().label("Requirements"),
 
   inclusionsAndbenefits: Yup.string()
     .optional()
@@ -28,6 +27,8 @@ export const programSchema = Yup.object({
   programValidityPolicy: Yup.string()
     .optional()
     .label("Program Validity Policy"),
+
+  howItWorks: Yup.string().optional().label("How it Works"),
 
   faqs: Yup.array().nullable().label("Faqs"),
 
@@ -59,10 +60,10 @@ export const programInitialValues: ProgramValues = {
   shortDescriptions: "",
   rescheduleAndCancelPolicy: "",
   highlights: "",
-  requirements: null,
   faqs: null,
   inclusionsAndbenefits: "",
   programValidityPolicy: "",
+  howItWorks: "",
   metaTitle: "",
   metaDescription: "",
   metaKeywords: "",
@@ -98,10 +99,10 @@ export interface ProgramValues {
   shortDescriptions: string;
   rescheduleAndCancelPolicy: string;
   highlights: string;
-  requirements: any[] | null;
   faqs: any[] | null;
   inclusionsAndbenefits: string;
   programValidityPolicy: string;
+  howItWorks: string;
 
   //   profilePhoto: FileType | null;
   metaTitle: string;

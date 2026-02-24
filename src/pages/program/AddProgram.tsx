@@ -30,7 +30,6 @@ export function AddProgram() {
   const navigate = useNavigate();
 
   const [categories, setCategories] = useState([]);
-  const [programRequirements, setProgramRequirements] = useState([]);
   const [kycDocuments, setKycDocumnets] = useState<any[]>([]);
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -71,11 +70,6 @@ export function AddProgram() {
         }
       }
 
-      let requirements = [];
-      if (values.requirements) {
-        requirements = values.requirements.map((value) => value.value);
-      }
-
       // item
       let usp = [];
       for (let item of uspInputFields) {
@@ -89,7 +83,6 @@ export function AddProgram() {
         category: values.category?.value,
         faqs,
         images: values.images || [],
-        requirements: requirements,
         usp: usp,
         compareWith: values?.compareWith?.value,
       };
@@ -135,24 +128,6 @@ export function AddProgram() {
       error: "",
     },
   ]);
-
-  // get program requirements
-  useEffect(function () {
-    async function getData() {
-      const apiResponse = await get("/programRequirements", true);
-      if (apiResponse?.status == 200) {
-        const modifiedValue = apiResponse?.body?.map((value: any) => {
-          return {
-            label: value.title,
-            value: value._id,
-          };
-        });
-        setProgramRequirements(modifiedValue);
-      }
-    }
-
-    getData();
-  }, []);
 
   // get get progrms for compare
   useEffect(function () {
@@ -421,6 +396,9 @@ export function AddProgram() {
     updatedInputFields.splice(index, 1);
     setUspInputFields(updatedInputFields);
   };
+
+  console.log(values);
+  console.log(errors);
 
   return (
     <div className="content-wrapper">
@@ -980,6 +958,30 @@ export function AddProgram() {
                   </div>
 
                   <div className="col-md-12 form-group">
+                    <label htmlFor={"howItWorks"} className="mb-2">
+                      How it Works
+                    </label>
+                    <CKEditor
+                      editor={ClassicEditor as any}
+                      data=""
+                      onChange={(event, editor) => {
+                        const data = editor.getData();
+                        setFieldValue("howItWorks", data);
+                      }}
+                      onBlur={(event, editor) => {
+                        setFieldTouched("howItWorks", true);
+                      }}
+                      // onFocus={(event, editor) => {}}
+                      id={"howItWorks"}
+                    />
+                    {errors.howItWorks && touched.howItWorks ? (
+                      <p className="custom-form-error text-danger">
+                        {errors.howItWorks}
+                      </p>
+                    ) : null}
+                  </div>
+
+                  {/* <div className="col-md-12 form-group">
                     <CustomSelect
                       label="Program Requirements"
                       placeholder="Select requirements"
@@ -997,7 +999,7 @@ export function AddProgram() {
                         setFieldTouched("requirements", true);
                       }}
                     />
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>

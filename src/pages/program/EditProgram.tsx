@@ -35,7 +35,6 @@ export function EditProgram() {
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
   const [uspInputFields, setUspInputFields] = useState<string[]>([""]);
-  const [programRequirements, setProgramRequirements] = useState([]);
   const [kycDocuments, setKycDocumnets] = useState<any[]>([]);
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -76,11 +75,6 @@ export function EditProgram() {
         }
       }
 
-      let requirements = [];
-      if (values.requirements) {
-        requirements = values.requirements.map((value) => value.value);
-      }
-
       // item
       let usp = [];
       for (let item of uspInputFields) {
@@ -96,7 +90,6 @@ export function EditProgram() {
         subCategory: undefined,
         faqs,
         images: values.images || [],
-        requirements: requirements,
         usp,
         days: undefined,
         amountPerMonth: undefined,
@@ -150,24 +143,6 @@ export function EditProgram() {
           };
         });
         setProgramsForCompare(modifiedValue);
-      }
-    }
-
-    getData();
-  }, []);
-
-  // get programRequirements
-  useEffect(function () {
-    async function getData() {
-      const apiResponse = await get("/programRequirements?limit=0", true);
-      if (apiResponse?.status == 200) {
-        const modifiedValue = apiResponse?.body?.map((value: any) => {
-          return {
-            label: value.title,
-            value: value._id,
-          };
-        });
-        setProgramRequirements(modifiedValue);
       }
     }
 
@@ -239,6 +214,7 @@ export function EditProgram() {
           delete data._id;
           delete data.createdAt;
           delete data.updatedAt;
+          delete data.requirements;
 
           data.isInjured = `${data.isInjured}`;
 
@@ -254,15 +230,6 @@ export function EditProgram() {
 
           data.status = `${data.status}`;
           data.isTrial = `${data.isTrial}`;
-
-          if (data?.requirements?.length) {
-            data.requirements = data?.requirements?.map((item: any) => {
-              return {
-                label: item.title,
-                value: item._id,
-              };
-            });
-          }
 
           if (data.faqs?.length) {
             let allFaqs: any = data?.faqs?.map((item: any) => {
@@ -1111,6 +1078,30 @@ export function EditProgram() {
                     </div>
 
                     <div className="col-md-12 form-group">
+                      <label htmlFor={"howItWorks"} className="mb-2">
+                        How it Works
+                      </label>
+                      <CKEditor
+                        editor={ClassicEditor as any}
+                        data={values.howItWorks || ""}
+                        onChange={(event, editor) => {
+                          const data = editor.getData();
+                          setFieldValue("howItWorks", data);
+                        }}
+                        onBlur={(event, editor) => {
+                          setFieldTouched("howItWorks", true);
+                        }}
+                        // onFocus={(event, editor) => {}}
+                        id={"howItWorks"}
+                      />
+                      {errors.howItWorks && touched.howItWorks ? (
+                        <p className="custom-form-error text-danger">
+                          {errors.howItWorks}
+                        </p>
+                      ) : null}
+                    </div>
+
+                    {/* <div className="col-md-12 form-group">
                       <CustomSelect
                         label="Program Requirements"
                         placeholder="Select requirements"
@@ -1128,7 +1119,7 @@ export function EditProgram() {
                           setFieldTouched("requirements", true);
                         }}
                       />
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </div>

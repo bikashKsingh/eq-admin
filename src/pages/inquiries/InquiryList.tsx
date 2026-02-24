@@ -382,6 +382,18 @@ export function InquiryList() {
                       <li className="d-flex px-3 gap-2">
                         <input
                           type="radio"
+                          id="positionbooksessionpage"
+                          value={"BOOK_SESSION_PAGE"}
+                          name="position"
+                          onChange={handleSetposition}
+                        />
+                        <label htmlFor="positionbooksessionpage">
+                          BOOK A SESSION PAGE
+                        </label>
+                      </li>
+                      <li className="d-flex px-3 gap-2">
+                        <input
+                          type="radio"
                           id="positionOtherpage"
                           value={"OTHER_PAGE"}
                           name="position"

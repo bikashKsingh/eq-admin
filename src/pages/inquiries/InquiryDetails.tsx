@@ -147,28 +147,80 @@ export function InquiryDetails() {
                     <h5
                       className="mb-2 cursor-hand"
                       data-bs-toggle="collapse"
-                      data-bs-target="#inquiryMessage"
+                      data-bs-target="#otherDetails"
                       aria-expanded="false"
-                      aria-controls="inquiryMessage"
+                      aria-controls="otherDetails"
                     >
-                      {inquiryDetails?.position == "BECOME_DEALER_PAGE"
-                        ? "Dealer Details"
-                        : "Message"}
+                      Other Details
                     </h5>
                     <button
                       className="btn btn-light"
                       type="button"
                       data-bs-toggle="collapse"
-                      data-bs-target="#inquiryMessage"
+                      data-bs-target="#otherDetails"
                       aria-expanded="false"
-                      aria-controls="inquiryMessage"
+                      aria-controls="otherDetails"
                     >
                       <i className="fa fa-angle-down text-primary" />
                     </button>
                   </div>
 
-                  <div className="collapse mt-2 show" id="inquiryMessage">
-                    <p>{inquiryDetails?.message}</p>
+                  <div className="collapse mt-2 show" id="otherDetails">
+                    <div className="mb-3">
+                      <label
+                        htmlFor=""
+                        style={{ fontWeight: "bold" }}
+                        className="mb-1"
+                      >
+                        Message
+                      </label>
+                      <p>{inquiryDetails?.message}</p>
+                    </div>
+
+                    {inquiryDetails?.position == "BOOK_SESSION" ? (
+                      <div className="">
+                        <div className="mb-3">
+                          <label
+                            htmlFor=""
+                            style={{ fontWeight: "bold" }}
+                            className="mb-1"
+                          >
+                            Trial Date
+                          </label>
+                          <p>{inquiryDetails?.trialDate}</p>
+                        </div>
+                        <div className="mb-3">
+                          <label
+                            htmlFor=""
+                            style={{ fontWeight: "bold" }}
+                            className="mb-1"
+                          >
+                            Goal
+                          </label>
+                          <p>{inquiryDetails?.goal?.title}</p>
+                        </div>
+                        <div className="mb-3">
+                          <label
+                            htmlFor=""
+                            style={{ fontWeight: "bold" }}
+                            className="mb-1"
+                          >
+                            Yoga Experience
+                          </label>
+                          <p>{inquiryDetails?.yogaExperience}</p>
+                        </div>
+                        <div className="mb-3">
+                          <label
+                            htmlFor=""
+                            style={{ fontWeight: "bold" }}
+                            className="mb-1"
+                          >
+                            Injury
+                          </label>
+                          <p>{inquiryDetails?.injury}</p>
+                        </div>
+                      </div>
+                    ) : null}
                   </div>
                 </div>
               </div>
