@@ -177,7 +177,7 @@ export function InquiryDetails() {
                       <p>{inquiryDetails?.message}</p>
                     </div>
 
-                    {inquiryDetails?.position == "BOOK_SESSION" ? (
+                    {inquiryDetails?.position == "BOOK_SESSION_PAGE" ? (
                       <div className="">
                         <div className="mb-3">
                           <label
@@ -195,9 +195,17 @@ export function InquiryDetails() {
                             style={{ fontWeight: "bold" }}
                             className="mb-1"
                           >
-                            Goal
+                            Goals
                           </label>
-                          <p>{inquiryDetails?.goal?.title}</p>
+                          <p className="d-flex gap-1">
+                            {inquiryDetails?.goals?.map((item: any) => {
+                              return (
+                                <span className="badge bg-info rounded">
+                                  {item?.title}
+                                </span>
+                              );
+                            })}
+                          </p>
                         </div>
                         <div className="mb-3">
                           <label

@@ -47,7 +47,7 @@ export async function get(endpoint: string, isProtected: boolean = false) {
 export async function post(
   endpoint: string,
   data: object,
-  isProtected: boolean = false
+  isProtected: boolean = false,
 ) {
   const url: string = `${API_URL}${endpoint}`;
   const body: string = JSON.stringify(data);
