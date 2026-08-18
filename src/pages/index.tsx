@@ -53,6 +53,11 @@ export * from "./faqs/AddFaqs";
 export * from "./faqs/FaqsList";
 export * from "./faqs/EditFaqs";
 
+// Customer Stories
+export * from "./customerStories/AddCustomerStory";
+export * from "./customerStories/CustomerStoryList";
+export * from "./customerStories/EditCustomerStory";
+
 // Trainer Speciality
 export * from "./trainerSpeciality/AddTrainerSpeciality";
 export * from "./trainerSpeciality/TrainerSpecialityList";

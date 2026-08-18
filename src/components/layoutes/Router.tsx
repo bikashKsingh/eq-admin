@@ -63,6 +63,17 @@ export function Router() {
         <Route path="/faqs/edit/:id" element={<Pages.EditFaqs />} />
         <Route path="/faqs" element={<Pages.FaqsList />} />
 
+        {/* Customer Stories */}
+        <Route
+          path="/customerStories/add"
+          element={<Pages.AddCustomerStory />}
+        />
+        <Route
+          path="/customerStories/edit/:id"
+          element={<Pages.EditCustomerStory />}
+        />
+        <Route path="/customerStories" element={<Pages.CustomerStoryList />} />
+
         {/* Category */}
         <Route path="/categories/add" element={<Pages.AddCategory />} />
         <Route path="/categories/edit/:id" element={<Pages.EditCategory />} />

@@ -320,6 +320,14 @@ export function Sidebar() {
           </div>
         </li>
 
+        {/* Customer Stories */}
+        <li className="nav-item">
+          <Link className="nav-link" to="/customerStories">
+            <i className="ti-comment-alt menu-icon"></i>
+            <span className="menu-title">Customer Stories</span>
+          </Link>
+        </li>
+
         <li className="nav-item">
           <Link className="nav-link" to="/bookings">
             <i className="ti-package menu-icon"></i>
