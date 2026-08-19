@@ -28,11 +28,41 @@ function getFileNameFromUrl(url: string) {
   return pathname.substring(pathname.lastIndexOf("/") + 1);
 }
 
+function uploadStoryMedia(
+  formData: FormData,
+  onProgress: (progress: number) => void,
+) {
+  return new Promise<any>((resolve, reject) => {
+    const request = new XMLHttpRequest();
+
+    request.open("POST", `${API_URL}/fileUploads`);
+
+    request.upload.onprogress = (event) => {
+      if (event.lengthComputable) {
+        onProgress(Math.round((event.loaded / event.total) * 100));
+      }
+    };
+
+    request.onload = () => {
+      try {
+        resolve(request.responseText ? JSON.parse(request.responseText) : {});
+      } catch (error) {
+        reject(new Error("Upload failed"));
+      }
+    };
+
+    request.onerror = () => reject(new Error("Upload failed"));
+    request.send(formData);
+  });
+}
+
 export function EditCustomerStory() {
   const navigate = useNavigate();
   const { id } = useParams();
   const [loading, setLoading] = useState<boolean>(true);
   const [updating, setUpdating] = useState<boolean>(false);
+  const [uploadingMedia, setUploadingMedia] = useState<boolean>(false);
+  const [uploadProgress, setUploadProgress] = useState<number>(0);
 
   const {
     values,
@@ -95,6 +125,7 @@ export function EditCustomerStory() {
     const files = event.target.files;
 
     if (!files || files.length === 0) {
+      setUploadProgress(0);
       setFieldTouched("mediaUrl", true);
       setFieldError("mediaUrl", "Story media is required");
       toast.error("Story media is required");
@@ -105,6 +136,7 @@ export function EditCustomerStory() {
 
     if (file.size > maxStoryMediaSizeBytes) {
       const message = `File size must be ${maxStoryMediaSizeMb}MB or less`;
+      setUploadProgress(0);
       setFieldTouched("mediaUrl", true);
       setFieldError("mediaUrl", message);
       toast.error(message);
@@ -119,6 +151,7 @@ export function EditCustomerStory() {
         : "";
 
     if (!mediaType) {
+      setUploadProgress(0);
       setFieldTouched("mediaUrl", true);
       setFieldError("mediaUrl", "Select a valid image or video file");
       toast.error("Select a valid image or video file");
@@ -129,24 +162,27 @@ export function EditCustomerStory() {
     formData.append("files", file);
 
     try {
-      const apiResponse = await fetch(`${API_URL}/fileUploads`, {
-        method: "POST",
-        body: formData,
-      });
-      const apiData = await apiResponse.json();
+      setUploadingMedia(true);
+      setUploadProgress(0);
+      const apiData = await uploadStoryMedia(formData, setUploadProgress);
 
       if (apiData.status == 200) {
+        setUploadProgress(100);
         setFieldTouched("mediaUrl", false);
         setFieldError("mediaUrl", "");
         setFieldValue("mediaUrl", apiData.body[0].filepath);
         setFieldValue("mediaType", mediaType);
       } else {
+        setUploadProgress(0);
         setFieldTouched("mediaUrl", true);
         setFieldError("mediaUrl", apiData.message);
         toast.error(apiData.message);
       }
     } catch (error: any) {
+      setUploadProgress(0);
       toast.error(error?.message);
+    } finally {
+      setUploadingMedia(false);
     }
   }
 
@@ -162,6 +198,7 @@ export function EditCustomerStory() {
       }
       setFieldError("mediaUrl", "");
       setFieldValue("mediaUrl", "");
+      setUploadProgress(0);
       const fileInput = document.getElementById("storyMediaFile") as HTMLInputElement;
       if (fileInput) fileInput.value = "";
     } catch (error: any) {
@@ -243,6 +280,7 @@ export function EditCustomerStory() {
                         onChange={handleUploadFile}
                         className="form-control"
                         accept="image/png,image/jpg,image/jpeg,image/webp,video/mp4,video/webm,video/ogg,.mp4"
+                        disabled={uploadingMedia}
                       />
                       {values.mediaUrl ? (
                         <Link to={values.mediaUrl} target="_blank" className="btn btn-light">
@@ -254,11 +292,29 @@ export function EditCustomerStory() {
                           type="button"
                           className="btn p-2 bg-light"
                           onClick={handleDeleteFile}
+                          disabled={uploadingMedia}
                         >
                           <i className="fa fa-trash text-danger"></i>
                         </button>
                       ) : null}
                     </div>
+                    {uploadProgress > 0 ? (
+                      <div className="mt-2">
+                        <div className="progress" style={{ height: 10 }}>
+                          <div
+                            className="progress-bar"
+                            role="progressbar"
+                            style={{ width: `${uploadProgress}%` }}
+                            aria-valuenow={uploadProgress}
+                            aria-valuemin={0}
+                            aria-valuemax={100}
+                          />
+                        </div>
+                        <small className="text-muted">
+                          {uploadingMedia ? `Uploading ${uploadProgress}%` : "Upload complete"}
+                        </small>
+                      </div>
+                    ) : null}
                     {touched.mediaUrl && errors.mediaUrl ? (
                       <p className="custom-form-error text-danger">{errors.mediaUrl}</p>
                     ) : null}
