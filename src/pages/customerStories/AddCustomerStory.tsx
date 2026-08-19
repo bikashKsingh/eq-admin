@@ -13,6 +13,8 @@ import {
 
 const imageMimeTypes = ["image/png", "image/jpg", "image/jpeg", "image/webp"];
 const videoMimeTypes = ["video/mp4", "video/webm", "video/ogg"];
+const maxStoryMediaSizeMb = 100;
+const maxStoryMediaSizeBytes = maxStoryMediaSizeMb * 1024 * 1024;
 
 function getFileNameFromUrl(url: string) {
   const urlObj = new URL(url);
@@ -67,6 +69,16 @@ export function AddCustomerStory() {
     }
 
     const file = files[0];
+
+    if (file.size > maxStoryMediaSizeBytes) {
+      const message = `File size must be ${maxStoryMediaSizeMb}MB or less`;
+      setFieldTouched("mediaUrl", true);
+      setFieldError("mediaUrl", message);
+      toast.error(message);
+      event.target.value = "";
+      return;
+    }
+
     const mediaType = imageMimeTypes.includes(file.type)
       ? "image"
       : videoMimeTypes.includes(file.type)
@@ -196,7 +208,7 @@ export function AddCustomerStory() {
                         id="storyMediaFile"
                         onChange={handleUploadFile}
                         className="form-control"
-                        accept="image/png,image/jpg,image/jpeg,image/webp,video/mp4,video/webm,video/ogg"
+                        accept="image/png,image/jpg,image/jpeg,image/webp,video/mp4,video/webm,video/ogg,.mp4"
                       />
                       {values.mediaUrl ? (
                         <Link to={values.mediaUrl} target="_blank" className="btn btn-light">
